@@ -1,0 +1,99 @@
+<div id="app">
+  <!--Dans la NavBar-->
+  <nav class="navbar navbar-expand navbar-dark bg-dark">
+    <a href="#" class="navbar-brand">bezKoder</a>
+    <ul class="navbar-nav mr-auto" routerLinkActive="active">
+      <li class="nav-item">
+        <a href="/home" class="nav-link" routerLink="home">Home </a>
+      </li>
+      <!--Si le user a les rôles ADMIN : -->
+      <li class="nav-item" *ngIf="showAdminBoard">
+        <a href="/admin" class="nav-link" routerLink="admin">Gestion des users</a>
+      </li>
+      <li class="nav-item" *ngIf="showAdminBoard">
+        <a class="nav-link" (click)=getEchecquierReInitialise()>Initialiser la base de données</a>
+      </li>
+      <!--Si le user est connecté, on renvoie un lien qui lui permet de commencer une partie -->
+      <li class="nav-item">
+        <a href="/user" class="nav-link" *ngIf="isLoggedIn" routerLink="echiquier">Commencer une partie</a>
+      </li>
+      <!--Si le user est connecté, on renvoie un lien qui renvoie vers les informations du user -->
+    </ul>
+    <!--Si le user n'est pas connecté, on renvoie 2 liens qui renvoient vers les formulaires
+    de connexion ou d'inscription
+    -->
+    <ul class="navbar-nav ml-auto" *ngIf="!isLoggedIn">
+      <li class="nav-item">
+        <a href="/register" class="nav-link" routerLink="register">Sign Up</a>
+      </li>
+      <li class="nav-item">
+        <a href="/login" class="nav-link" routerLink="login">Login</a>
+      </li>
+    </ul>
+    <!--Si le user est connecté on renvoie un lien qui renvoie vers :
+      - Les informations de profil du user
+      - Un bouton de déconnexion
+    -->
+    <ul class="navbar-nav ml-auto" *ngIf="isLoggedIn">
+      <li class="nav-item">
+        <a href="/profile" class="nav-link" routerLink="profile">{{ username }}</a>
+      </li>
+      <li class="nav-item">
+        <a href class="nav-link" (click)="logout()">LogOut</a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+
+
+
+<!-- Liste des fenêtres modales appelé par le composant "Modal" -->
+<div>
+<jw-modal id="modal-1">
+  <h1>Le user est créé</h1>
+  <button (click)="modalService.close();">Close</button>
+</jw-modal>
+
+<jw-modal id="modal-2">
+  <h1>Le user est modifié</h1>
+  <button (click)="modalService.close();">Close</button>
+</jw-modal>
+
+<jw-modal id="modal-3">
+  <h1>Impossible d'ajouter le rôle.
+  </h1>
+  <p style="padding-bottom: 50px;">Vous n'avez pas renseigné de rôle à ajouter.</p>
+  <button (click)="modalService.close();">Close</button>
+</jw-modal>
+
+<jw-modal id="modal-4">
+  <h1>Impossible d'ajouter le rôle</h1>
+  <p style="padding-bottom: 50px;">Ce rôle est déjà affecté au user.</p>
+  <button (click)="modalService.close();">Close</button>
+</jw-modal>
+
+<jw-modal id="modal-5">
+  <h1>Base de données ré-initialisée</h1>
+  <button (click)="modalService.close();">Close</button>
+</jw-modal>
+
+<jw-modal id="modal-6">
+  <h1>Veuillez sélectionner une pièce à déplacer.</h1>
+  <button (click)="modalService.close();">Close</button>
+</jw-modal>
+
+<jw-modal id="modal-7">
+  <h1>Veuillez sélectionner la case de destination</h1>
+  <button (click)="modalService.close();">Close</button>
+</jw-modal>
+
+<jw-modal id="modal-8">
+  <h1>Veuillez sélectionner la case de destination</h1>
+  <button (click)="modalService.close();">Close</button>
+</jw-modal>
+</div>

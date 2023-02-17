@@ -1,0 +1,48 @@
+<div class="container">
+
+
+  <!--En-tête du board admin-->
+  <header class="jumbotron">
+    <h4 class="center">{{ displayContent1 }}</h4>
+    <p class="center">{{ displayContent2 }}</p>
+  </header>
+
+
+  <!--Affichage des users-->
+  <body>
+  <h4>Gestion des users</h4>
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">Username</th>
+      <th scope="col">Email</th>
+      <th scope="col">Role</th>
+      <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor=" let user of users_list"> <!--| employeeFilterPipe:searchText-->
+      <td>{{user.username}}</td>
+      <td>{{user.email}}</td>
+      <td *ngFor=" let role of user.roles">{{role.name}}</td>
+      <!--Boutons pour modifier/supprimer les users-->
+      <td>
+        <button class="btn btn-warning" [routerLink]="['edit/', user.id]">Modifier</button>
+        <button class="btn btn-danger" (click)="deleteUser(user.id)">Supprimer</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+
+  <!--Boutons pour ajouter un user-->
+  <div class="group">
+    <br>
+    <button class = "ajouter" (click)="addUser()">Ajouter un user</button>
+  </div>
+  <br>
+  <br>
+  </body>
+
+
+</div>

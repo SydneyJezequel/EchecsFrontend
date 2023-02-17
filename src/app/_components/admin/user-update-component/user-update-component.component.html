@@ -1,0 +1,66 @@
+<div class="line">
+
+
+<!--Titre-->
+<h4>Modifier un user</h4>
+<br>
+<br>
+
+
+<!--Formulaire de modification d'un user-->
+<div class="form_container">
+  <form name="form" #f="ngForm" (ngSubmit)="f.form.valid && editUser(user.id, user)">
+    <div class="group">
+      <label for="username">Username : </label>
+      <input type="text" name="username" id="username" [(ngModel)]="user.username" #username="ngModel" required>
+    </div>
+    <div class="group">
+      <label for="email">Email : </label>
+      <input type="text" name="email" id="email" [(ngModel)]="user.email" #email="ngModel" required>
+    </div>
+    <div class="group">
+      <label for="password">Password : </label>
+      <input type="text" name="password" id="password" [(ngModel)]="user.password" #password="ngModel" required>
+    </div>
+    <div class="group">
+      <p>Rôles du user :</p> <div *ngFor="let item of user.roles"> {{item.name}} <button (click)="DeleteRole(item)"> </button> </div> <div> </div>
+      <br>
+      <label for="role">Ajout | Suppression de rôles : </label>
+      <select [(ngModel)]="chosenObj" name="role" id="role" class="form-control">
+        <option *ngFor="let selectedRole of AllRoles" [ngValue]="selectedRole">
+          {{ selectedRole.name }}
+        </option>
+      </select>
+      <button (click)="AddRole()">Ajouter ce rôle</button>
+    </div>
+<div class="group">
+  <br>
+  <button class = "modifier" (click)="editUser(user.id, user)">Modifier un user</button>
+</div>
+</form>
+</div>
+</div>
+<br>
+<br>
+<br>
+
+
+<!--Liste des rôles disponibles-->
+<table>
+  <th>Liste complète des rôles</th>
+  <tr *ngFor="let item of AllRoles"> {{item.id}} {{item.name}}</tr>
+</table>
+<br>
+<br>
+
+
+<!--Bouton de retour vers le board Admin-->
+<div class="group">
+  <br>
+  <button class = "modifier" (click)="gotoBoardAdmin()">Board Admin</button>
+</div>
+
+
+
+
+

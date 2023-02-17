@@ -1,0 +1,131 @@
+<h4>Camp blanc</h4>
+
+
+<!--Echiquier pour le camp blanc-->
+<table>
+  <thead>
+  <th>
+    <tr *ngFor=" let i of numbers">
+      <td>{{i}}</td> <br><br><br><br>
+    </tr>
+  </th>
+  <th>
+    <tr>A</tr>
+    <tr *ngFor=" let i of cases | slice:0:8">
+      <div [ngClass]="{casenoire: i.no_case%2, caseblanche: !(i.no_case%2)}">
+        <td class="cel" *ngIf="i.piece?.type==null" (click)="deplacement(i)"></td>
+        <td class="cel" *ngIf="i.piece?.type!=null" (click)="deplacement(i)">
+          <div [ngClass]="{pieceBlanche: i.piece.couleur.no_couleur==1, pieceNoire:i.piece.couleur.no_couleur==2}">
+            {{i.piece?.type!}}
+          </div>
+        </td>
+      </div>
+    </tr>
+    <tr>A</tr>
+  </th>
+  <th>
+    <tr>B</tr>
+    <tr *ngFor=" let i of cases | slice:8:16">
+      <div [ngClass]="{caseblanche: i.no_case%2, casenoire: !(i.no_case%2)}">
+        <td class="cel" *ngIf="i.piece?.type==null" (click)="deplacement(i)"></td>
+        <td class="cel" *ngIf="i.piece?.type!=null" (click)="deplacement(i)">
+          <div [ngClass]="{pieceBlanche: i.piece.couleur.no_couleur==1, pieceNoire:i.piece.couleur.no_couleur==2}">
+            {{i.piece?.type!}}
+          </div>
+        </td>
+      </div>
+    </tr>
+    <tr>B</tr>
+  </th>
+  <th>
+    <tr>C</tr>
+    <tr *ngFor=" let i of cases | slice:16:24">
+      <div [ngClass]="{casenoire: i.no_case%2, caseblanche: !(i.no_case%2)}">
+        <td class="cel" *ngIf="i.piece?.type==null" (click)="deplacement(i)"></td>
+        <td class="cel" *ngIf="i.piece?.type!=null" (click)="deplacement(i)">
+          <div [ngClass]="{pieceBlanche: i.piece.couleur.no_couleur==1, pieceNoire:i.piece.couleur.no_couleur==2}">
+            {{i.piece?.type!}}
+          </div>
+        </td>
+      </div>
+    </tr>
+    <tr>C</tr>
+  </th>
+  <th>
+    <tr>D</tr>
+    <tr *ngFor=" let i of cases | slice:24:32">
+      <div [ngClass]="{caseblanche: i.no_case%2, casenoire: !(i.no_case%2)}">
+        <td class="cel" *ngIf="i.piece?.type==null" (click)="deplacement(i)"></td>
+        <td class="cel" *ngIf="i.piece?.type!=null" (click)="deplacement(i)">
+          <div [ngClass]="{pieceBlanche: i.piece.couleur.no_couleur==1, pieceNoire:i.piece.couleur.no_couleur==2}">
+            {{i.piece?.type!}}
+          </div>
+        </td>
+      </div>
+    </tr>
+    <tr>D</tr>
+  </th>
+  <th>
+    <tr>E</tr>
+    <tr *ngFor=" let i of cases | slice:32:40">
+      <div [ngClass]="{casenoire: i.no_case%2, caseblanche: !(i.no_case%2)}">
+        <td class="cel" *ngIf="i.piece?.type==null" (click)="deplacement(i)"></td>
+        <td class="cel" *ngIf="i.piece?.type!=null" (click)="deplacement(i)">
+          <div [ngClass]="{pieceBlanche: i.piece.couleur.no_couleur==1, pieceNoire:i.piece.couleur.no_couleur==2}">
+            {{i.piece?.type!}}
+          </div>
+        </td>
+      </div>
+    </tr>
+    <tr>E</tr>
+  </th>
+  <th>
+    <tr>F</tr>
+    <tr *ngFor=" let i of cases | slice:40:48">
+      <div [ngClass]="{caseblanche: i.no_case%2, casenoire: !(i.no_case%2)}">
+        <td class="cel" *ngIf="i.piece?.type==null" (click)="deplacement(i)"></td>
+        <td class="cel" *ngIf="i.piece?.type!=null" (click)="deplacement(i)">
+          <div [ngClass]="{pieceBlanche: i.piece.couleur.no_couleur==1, pieceNoire:i.piece.couleur.no_couleur==2}">
+            {{i.piece?.type!}}
+          </div>
+        </td>
+      </div>
+    </tr>
+    <tr>F</tr>
+  </th>
+  <th>
+    <tr>G</tr>
+    <tr *ngFor=" let i of cases | slice:48:56">
+      <div [ngClass]="{casenoire: i.no_case%2, caseblanche: !(i.no_case%2)}">
+        <td class="cel" *ngIf="i.piece?.type==null" (click)="deplacement(i)"></td>
+        <td class="cel" *ngIf="i.piece?.type!=null" (click)="deplacement(i)">
+          <div [ngClass]="{pieceBlanche: i.piece.couleur.no_couleur==1, pieceNoire:i.piece.couleur.no_couleur==2}">
+            {{i.piece?.type!}}
+          </div>
+        </td>
+      </div>
+    </tr>
+    <tr>G</tr>
+  </th>
+  <th>
+    <tr>H</tr>
+    <tr *ngFor=" let i of cases | slice:56:64">
+      <div [ngClass]="{caseblanche: i.no_case%2, casenoire: !(i.no_case%2)}">
+        <td class="cel" *ngIf="i.piece?.type==null" (click)="deplacement(i)"></td>
+        <td class="cel" *ngIf="i.piece?.type!=null" (click)="deplacement(i)">
+          <div [ngClass]="{pieceBlanche: i.piece.couleur.no_couleur==1, pieceNoire:i.piece.couleur.no_couleur==2}">
+            {{i.piece?.type!}}
+          </div>
+        </td>
+      </div>
+    </tr>
+    <tr>H</tr>
+  </th>
+  <th>
+    <tr *ngFor=" let i of numbers">
+      <td>{{i}}</td> <br><br><br><br>
+    </tr>
+  </th>
+  </thead>
+</table>
+
