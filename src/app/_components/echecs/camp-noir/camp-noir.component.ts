@@ -26,6 +26,7 @@ export class CampNoirComponent implements OnInit {
   public cases!:CaseGet[];
   public numbers = [1,2,3,4,5,6,7,8];
   public case!:Case;
+  public noir:String="noir";
 
 
 
@@ -53,12 +54,15 @@ export class CampNoirComponent implements OnInit {
   /**
    * Méthode qui ré-initialise l'échecquier pour commencer une nouvelle partie.
    */
-  public getEchecquierReInitialise():void
+  public getEchecquierReInitialise( ):void
   {
-    this.echecsservice.getEchequierReInitialise().subscribe(
+    this.echecsservice.getEchequierReInitialise(this.noir).subscribe(
       (response: CaseGet[]) =>
       {
         this.cases = response;
+        // *************** TEST ***************
+        console.log(this.cases)
+        // *************** TEST ***************
         this.cases.sort(function compare(a, b) {
           if (a.no_case < b.no_case)
             return -1;
@@ -82,7 +86,7 @@ export class CampNoirComponent implements OnInit {
    */
   public getEchecquier():void
   {
-    this.echecsservice.getEchequier().subscribe(
+    this.echecsservice.getEchequier(this.noir).subscribe(
       (response: CaseGet[]) =>
       {
         this.cases = response;
@@ -112,20 +116,12 @@ export class CampNoirComponent implements OnInit {
     if (!this.caseDeplacement.casesDeplacement.length) {
       this.selectCaseDepart(i);
       // TEST :
-      /*
-      console.log("Case de départ");
       console.log(i);
-      console.log(i.piece);
-      */
       // TEST :
     } else {
       this.selectCaseDestination(i);
       // TEST :
-      /*
-      console.log("Case d'arrivée");
       console.log(i);
-      console.log(i.piece);
-      */
       // TEST :
       this.echecsservice.deplacerPiece(this.caseDeplacement.casesDeplacement).subscribe(
         (response: CaseGet[]) => {

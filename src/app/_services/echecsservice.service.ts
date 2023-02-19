@@ -17,10 +17,9 @@ export class EchecsserviceService {
 
 
   /******************************* Attributs *******************************/
-  private reinitialize:string="api/nouvelle_partie"
-  private refresh:string="api/echiquier"
+  private reinitialize:string="api/nouvelle_partie/"
+  private refresh:string="api/echiquier/"
   private deplacer:string="api/deplacer"
-
 
 
 
@@ -35,9 +34,10 @@ export class EchecsserviceService {
   /**
    * Méthode qui ré-initialise l'échiquier.
    */
-  public getEchequierReInitialise():Observable<CaseGet[]>
+  public getEchequierReInitialise(camp:String):Observable<CaseGet[]>
   {
-    return this.http.get<CaseGet[]>(this.reinitialize);
+    console.log(this.reinitialize+camp);
+    return this.http.get<CaseGet[]>(this.reinitialize+camp);
   }
 
 
@@ -45,11 +45,9 @@ export class EchecsserviceService {
   /**
    * Méthode qui affiche l'échiquier.
    */
-  public getEchequier():Observable<CaseGet[]>
+  public getEchequier(camp:String):Observable<CaseGet[]>
   {
-    let test = this.http.get<CaseGet[]>(this.refresh);
-    console.log(test);
-    return this.http.get<CaseGet[]>(this.refresh);
+    return this.http.get<CaseGet[]>(this.refresh+camp);
   }
 
 

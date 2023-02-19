@@ -1,7 +1,7 @@
 <div id="app">
   <!--Dans la NavBar-->
   <nav class="navbar navbar-expand navbar-dark bg-dark">
-    <a href="#" class="navbar-brand">bezKoder</a>
+    <a href="#" class="navbar-brand">Checs turnament</a>
     <ul class="navbar-nav mr-auto" routerLinkActive="active">
       <li class="nav-item">
         <a href="/home" class="nav-link" routerLink="home">Home </a>
@@ -11,7 +11,7 @@
         <a href="/admin" class="nav-link" routerLink="admin">Gestion des users</a>
       </li>
       <li class="nav-item" *ngIf="showAdminBoard">
-        <a class="nav-link" (click)=getEchecquierReInitialise()>Initialiser la base de données</a>
+        <a class="nav-link" (click)=getEchecquierReInitialise(this.camp)>Initialiser la base de données</a>
       </li>
       <!--Si le user est connecté, on renvoie un lien qui lui permet de commencer une partie -->
       <li class="nav-item">

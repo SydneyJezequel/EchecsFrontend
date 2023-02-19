@@ -30,7 +30,7 @@ export class AppComponent {
   showAdminBoard = false;
   showModeratorBoard = false;
   username?: string;
-
+  camp!:string;
 
 
 
@@ -97,9 +97,9 @@ export class AppComponent {
   /**
    * Méthode qui ré-initialise l'échecquier pour commencer une nouvelle partie.
    */
-  public getEchecquierReInitialise()
+  public getEchecquierReInitialise(camp:String)
   {
-    this.echecsservice.getEchequierReInitialise().subscribe(
+    this.echecsservice.getEchequierReInitialise(this.camp).subscribe(
       (response: CaseGet[]) =>
       {
           this.modalService.open('modal-5');
