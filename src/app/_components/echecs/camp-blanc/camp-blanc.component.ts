@@ -110,6 +110,7 @@ export class CampBlancComponent implements OnInit {
    * @param i : case sélectionnée.
    */
   public deplacement(i: CaseGet) {
+    console.log("numéro de la case : "+i.no_case);
     // 1 - Sélection de la case de Départ et de la case d'arrivée :
     if (!this.caseDeplacement.casesDeplacement.length) {
       this.selectCaseDepart(i);

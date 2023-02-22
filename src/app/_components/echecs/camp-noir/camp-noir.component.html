@@ -70,7 +70,7 @@
       <tr *ngFor=" let i of cases | slice:32:40">
         <div [ngClass]="{caseblanche: i.no_case%2, casenoire: !(i.no_case%2)}">
           <td class="cel" *ngIf="i.piece?.type==null" (click)="deplacement(i)"></td>
-          <td class="cel" *ngIf="i.piece?.type!=null" (click)="selectPiece(i)">
+          <td class="cel" *ngIf="i.piece?.type!=null" (click)="deplacement(i)">
             <div [ngClass]="{pieceBlanche: i.piece.couleur.no_couleur==1, pieceNoire:i.piece.couleur.no_couleur==2}">
               {{i.piece.type}}
             </div>
