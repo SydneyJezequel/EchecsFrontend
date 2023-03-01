@@ -36,7 +36,6 @@ export class EchecsserviceService {
    */
   public getEchequierReInitialise(camp:String):Observable<CaseGet[]>
   {
-    console.log(this.reinitialize+camp);
     return this.http.get<CaseGet[]>(this.reinitialize+camp);
   }
 
@@ -57,8 +56,6 @@ export class EchecsserviceService {
    * @param cases : tableau qui contient les cases de départ et de destination.
    */
   deplacerPiece(cases:CaseGet[]):Observable<CaseGet[]> {
-    console.log("Données envoyées dans le backend :");
-    console.log(cases);
     return this.http.put<CaseGet[]>(this.deplacer, cases);
   }
 

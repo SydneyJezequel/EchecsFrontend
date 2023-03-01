@@ -127,6 +127,14 @@ export class CampNoirComponent implements OnInit {
       this.echecsservice.deplacerPiece(this.caseDeplacement.casesDeplacement).subscribe(
         (response: CaseGet[]) => {
           this.cases = response;
+          // Tri des cases :
+          this.cases.sort(function compare(a, b) {
+            if (a.no_case < b.no_case)
+              return -1;
+            if (a.no_case > b.no_case)
+              return 1;
+            return 0;
+          });
         },(error:HttpErrorResponse) =>
       {
         alert(error.message);
