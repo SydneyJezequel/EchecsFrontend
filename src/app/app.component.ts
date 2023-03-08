@@ -7,6 +7,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {EchecsserviceService} from "./_services/echecsservice.service";
 
 
+
 /**
  * Ce composant :
  * - Gère l'accès au site.
@@ -31,6 +32,11 @@ export class AppComponent {
   showModeratorBoard = false;
   username?: string;
   camp!:string;
+  dame!:string;
+  tour!:string;
+  fou!:string;
+  cavalier!:string;
+  caseDestination!:CaseGet;
 
 
 
@@ -72,6 +78,7 @@ export class AppComponent {
 
 
   /******************************* Méthodes *******************************/
+
 
   /**
    * Déconnexion :

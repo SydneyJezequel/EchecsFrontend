@@ -4,6 +4,7 @@ import {EchecsserviceService} from "../../../_services/echecsservice.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {CasesDeplacement} from "../../../variables-globales/CasesDeplacement";
 import {ModalService} from "../../../_services/modal.service";
+import {Piece} from "../../../_model/Piece";
 
 
 /**
@@ -169,17 +170,34 @@ export class CampBlancComponent implements OnInit {
 
 
 
+  // NOUVELLE VERSION DE LA METHODE :
   /**
    * Méthode qui récupère la case de destination
    * @param i : case de destination sélectionnée.
    */
+  /*
   public selectCaseDestination(i: CaseGet) {
     // 1- Sélectionner la case de destination et déplacer la pièce :
     let caseDeDestination = this.selectCase(i);
-    this.caseDeplacement.casesDeplacement.push(caseDeDestination);
+    let piece = caseDeDestination.piece;
+    if(this.pionBoutEchiquier(piece, caseDeDestination))
+    {
+      this.modalService.open('modal-9');
+      this.caseDeplacement.casesDeplacement.push(caseDeDestination);
+    }else {
+      this.caseDeplacement.casesDeplacement.push(caseDeDestination);
+    }
     return this.caseDeplacement.casesDeplacement;
   }
+  */
+  // ANCIENNE VERSION DE LA METHODE :
 
+    public selectCaseDestination(i: CaseGet) {
+      // 1- Sélectionner la case de destination et déplacer la pièce :
+      let caseDeDestination = this.selectCase(i);
+      this.caseDeplacement.casesDeplacement.push(caseDeDestination);
+      return this.caseDeplacement.casesDeplacement;
+  }
 
 
   /**
@@ -200,6 +218,47 @@ export class CampBlancComponent implements OnInit {
   public selectCase(i: CaseGet)
   {
     return i;
+  }
+
+
+
+  /**
+   * Méthode qui identifie si un pion est arrivé au bout de l'échiquier.
+   * @param piece
+   * @param caseDeDestination
+   */
+  public pionBoutEchiquier(piece:Piece, caseDeDestination:CaseGet)
+  {
+    // Règles de contrôle pour transformer un pion
+    if(piece.couleur.couleur=="noir"
+      && caseDeDestination.no_case == 8
+      || caseDeDestination.no_case == 16
+      || caseDeDestination.no_case == 24
+      || caseDeDestination.no_case == 32
+      || caseDeDestination.no_case == 40
+      || caseDeDestination.no_case == 48
+      || caseDeDestination.no_case == 56
+      || caseDeDestination.no_case == 64
+      )
+      {
+        return true;
+      }else if (piece.couleur.couleur=="blanc"
+        || caseDeDestination.no_case == 1
+        || caseDeDestination.no_case == 9
+        || caseDeDestination.no_case == 17
+        || caseDeDestination.no_case == 25
+        || caseDeDestination.no_case == 33
+        || caseDeDestination.no_case == 41
+        || caseDeDestination.no_case == 49
+        || caseDeDestination.no_case == 57
+      )
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
   }
 
 

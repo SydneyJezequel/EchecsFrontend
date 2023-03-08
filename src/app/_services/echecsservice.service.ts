@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {CaseGet} from "../_model/CaseGet";
-import {User} from "../_model/User";
 
 
 /**
@@ -20,6 +19,7 @@ export class EchecsserviceService {
   private reinitialize:string="api/nouvelle_partie/"
   private refresh:string="api/echiquier/"
   private deplacer:string="api/deplacer"
+  private transformer:string="api/transformer"
 
 
 
@@ -46,6 +46,7 @@ export class EchecsserviceService {
    */
   public getEchequier(camp:String):Observable<CaseGet[]>
   {
+    console.log(this.http.get<CaseGet[]>(this.refresh+camp));
     return this.http.get<CaseGet[]>(this.refresh+camp);
   }
 
@@ -59,6 +60,15 @@ export class EchecsserviceService {
     return this.http.put<CaseGet[]>(this.deplacer, cases);
   }
 
+
+
+  /**
+   * Méthode qui transforme un pion en pièce.
+   * @param cases : string qui contient le nom de la pièce dans laquelle sera transformé le pion.
+   */
+  transformerPion(caseDestination:CaseGet):Observable<CaseGet> {
+    return this.http.put<CaseGet>(this.transformer, caseDestination);
+  }
 
 
 

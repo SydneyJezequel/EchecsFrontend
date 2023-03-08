@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import {ModalComponent} from "../_components/modal/modal.component";
+import {EchecsserviceService} from "./echecsservice.service";
+import {CaseGet} from "../_model/CaseGet";
 
 
 /**
@@ -17,7 +19,7 @@ export class ModalService {
   /******************************* Attributs *******************************/
 
   private modals: ModalComponent[] = [];
-
+  constructor(private echecsservice:EchecsserviceService) { }
 
 
 
@@ -76,7 +78,13 @@ export class ModalService {
     modal?.close();
   }
 
-
+  /**
+   * Méthode qui transforme un pion arrivé au bout de l'échiquier en nouvelle pièce.
+   */
+   nouvellePiece(caseDestination:CaseGet, nouvellePiece:string){
+     caseDestination.piece.type = nouvellePiece;
+     this.echecsservice.transformerPion(caseDestination);
+   }
 
 
 }
