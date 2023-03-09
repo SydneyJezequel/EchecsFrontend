@@ -5,6 +5,8 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {CasesDeplacement} from "../../../variables-globales/CasesDeplacement";
 import {ModalService} from "../../../_services/modal.service";
 import {Piece} from "../../../_model/Piece";
+import {TransformationPion} from "../../../variables-globales/TransformationPion";
+
 
 
 /**
@@ -14,7 +16,7 @@ import {Piece} from "../../../_model/Piece";
   selector: 'app-camp-blanc',
   templateUrl: './camp-blanc.component.html',
   styleUrls: ['./camp-blanc.component.scss'],
-  providers: [CasesDeplacement]
+  providers: [CasesDeplacement, TransformationPion]
 })
 export class CampBlancComponent implements OnInit {
 
@@ -35,7 +37,8 @@ export class CampBlancComponent implements OnInit {
 
   constructor(private echecsservice: EchecsserviceService,
               private caseDeplacement:CasesDeplacement,
-              private modalService: ModalService) {
+              private modalService: ModalService,
+              private transformationPion:TransformationPion) {
   }
 
 
@@ -175,29 +178,35 @@ export class CampBlancComponent implements OnInit {
    * Méthode qui récupère la case de destination
    * @param i : case de destination sélectionnée.
    */
-  /*
   public selectCaseDestination(i: CaseGet) {
     // 1- Sélectionner la case de destination et déplacer la pièce :
     let caseDeDestination = this.selectCase(i);
-    let piece = caseDeDestination.piece;
-    if(this.pionBoutEchiquier(piece, caseDeDestination))
+    let piece = this.caseDeplacement.casesDeplacement[0].piece;
+    let typePiece:string = this.caseDeplacement.casesDeplacement[0].piece.type;
+    if(this.pionBoutEchiquier(typePiece, caseDeDestination))
     {
       this.modalService.open('modal-9');
-      this.caseDeplacement.casesDeplacement.push(caseDeDestination);
-    }else {
-      this.caseDeplacement.casesDeplacement.push(caseDeDestination);
+
+      caseDeDestination.piece = piece;
+      console.log(caseDeDestination);
     }
+    this.caseDeplacement.casesDeplacement.push(caseDeDestination);
     return this.caseDeplacement.casesDeplacement;
   }
-  */
-  // ANCIENNE VERSION DE LA METHODE :
 
+
+
+
+
+  // ANCIENNE VERSION DE LA METHODE :
+  /*
     public selectCaseDestination(i: CaseGet) {
       // 1- Sélectionner la case de destination et déplacer la pièce :
       let caseDeDestination = this.selectCase(i);
       this.caseDeplacement.casesDeplacement.push(caseDeDestination);
       return this.caseDeplacement.casesDeplacement;
   }
+  */
 
 
   /**
@@ -227,10 +236,15 @@ export class CampBlancComponent implements OnInit {
    * @param piece
    * @param caseDeDestination
    */
-  public pionBoutEchiquier(piece:Piece, caseDeDestination:CaseGet)
+  public pionBoutEchiquier(typePiece:string, caseDeDestination:CaseGet)
   {
+    let pionBlanc:string = "pion blanc";
+    let pionNoir:string = "pion noir";
+    console.log("type de la pièce : " + typePiece);
+    console.log("pion blanc : " + pionBlanc);
+    console.log("pion noir : " + pionNoir);
     // Règles de contrôle pour transformer un pion
-    if(piece.couleur.couleur=="noir"
+    if(typePiece==pionNoir
       && caseDeDestination.no_case == 8
       || caseDeDestination.no_case == 16
       || caseDeDestination.no_case == 24
@@ -239,11 +253,12 @@ export class CampBlancComponent implements OnInit {
       || caseDeDestination.no_case == 48
       || caseDeDestination.no_case == 56
       || caseDeDestination.no_case == 64
-      )
-      {
-        return true;
-      }else if (piece.couleur.couleur=="blanc"
-        || caseDeDestination.no_case == 1
+    )
+    {
+      console.log("pion noir en bout de ligne validé");
+      return true;
+    }else if (typePiece==pionBlanc
+        && caseDeDestination.no_case == 1
         || caseDeDestination.no_case == 9
         || caseDeDestination.no_case == 17
         || caseDeDestination.no_case == 25
@@ -253,13 +268,77 @@ export class CampBlancComponent implements OnInit {
         || caseDeDestination.no_case == 57
       )
       {
+        console.log("pion blanc en bout de ligne validé");
         return true;
       }
       else
       {
+        console.log("pas de pion en bout de ligne");
         return false;
       }
   }
+
+
+
+  /**
+   * Méthode qui change le type du pion.
+   * @param piece
+   * @param caseDeDestination
+   */
+  public changementTypeDuPion(piece:Piece, transformationPion:TransformationPion)
+  {
+    if(piece.couleur.couleur=="blanc")
+    {
+      switch(transformationPion.transformationPion) {
+        case "dame": {
+          piece.type = "reine blanc";
+          break;
+        }
+        case "tour": {
+          piece.type = "tour blanc";
+          break;
+        }
+        case "fou": {
+          piece.type = "fou blanc";
+          break;
+        }
+        case "cavalier": {
+          piece.type = "cavalier blanc";
+          break;
+        }
+        default: {
+          piece.type = "pion blanc";
+          break;
+        }
+      }
+    }else
+    {
+      switch(transformationPion.transformationPion) {
+        case "dame": {
+          piece.type = "reine noir";
+          break;
+        }
+        case "tour": {
+          piece.type = "tour noir";
+          break;
+        }
+        case "fou": {
+          piece.type = "fou noir";
+          break;
+        }
+        case "cavalier": {
+          piece.type = "cavalier noir";
+          break;
+        }
+        default: {
+          piece.type = "pion noir";
+          break;
+        }
+      }
+    }
+  }
+
+
 
 
 

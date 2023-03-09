@@ -6,6 +6,7 @@ import {Case} from "../../../_model/Case";
 import {CasesDeplacement} from "../../../variables-globales/CasesDeplacement";
 import {ModalService} from "../../../_services/modal.service";
 import {Piece} from "../../../_model/Piece";
+import {TransformationPion} from "../../../variables-globales/TransformationPion";
 
 
 /**
@@ -36,7 +37,8 @@ export class CampNoirComponent implements OnInit {
 
   constructor(private echecsservice:EchecsserviceService,
               private caseDeplacement:CasesDeplacement,
-              private modalService: ModalService) { }
+              private modalService: ModalService,
+              private transformationPion:TransformationPion) { }
 
 
 
@@ -170,6 +172,7 @@ export class CampNoirComponent implements OnInit {
 
 
 
+
   // NOUVELLE VERSION DE LA METHODE :
   /**
    * Méthode qui récupère la case de destination
@@ -179,17 +182,23 @@ export class CampNoirComponent implements OnInit {
   public selectCaseDestination(i: CaseGet) {
     // 1- Sélectionner la case de destination et déplacer la pièce :
     let caseDeDestination = this.selectCase(i);
-    let piece = caseDeDestination.piece;
-    if(this.pionBoutEchiquier(piece, caseDeDestination))
+    let piece = this.caseDeplacement.casesDeplacement[0].piece;
+    let typePiece:string = this.caseDeplacement.casesDeplacement[0].piece.type;
+    if(this.pionBoutEchiquier(typePiece, caseDeDestination))
     {
       this.modalService.open('modal-9');
-      this.caseDeplacement.casesDeplacement.push(caseDeDestination);
-    }else {
-      this.caseDeplacement.casesDeplacement.push(caseDeDestination);
+
+      caseDeDestination.piece = piece;
+      console.log(caseDeDestination);
     }
+    this.caseDeplacement.casesDeplacement.push(caseDeDestination);
     return this.caseDeplacement.casesDeplacement;
   }
   */
+
+
+
+
   // ANCIENNE VERSION DE LA METHODE :
   public selectCaseDestination(i: CaseGet) {
     // 1- Sélectionner la case de destination et déplacer la pièce :
@@ -197,6 +206,7 @@ export class CampNoirComponent implements OnInit {
     this.caseDeplacement.casesDeplacement.push(caseDeDestination);
     return this.caseDeplacement.casesDeplacement;
   }
+
 
 
 
@@ -229,8 +239,12 @@ export class CampNoirComponent implements OnInit {
    */
   public pionBoutEchiquier(piece:Piece, caseDeDestination:CaseGet)
   {
+    console.log("pion au bout de l'échiquier : ");
+    console.log(piece);
+    console.log(caseDeDestination);
     // Règles de contrôle pour transformer un pion
-    if(piece.couleur.couleur=="noir"
+    if(piece.type.includes("pion")
+      && piece.couleur.couleur=="noir"
       && caseDeDestination.no_case == 8
       || caseDeDestination.no_case == 16
       || caseDeDestination.no_case == 24
@@ -241,9 +255,11 @@ export class CampNoirComponent implements OnInit {
       || caseDeDestination.no_case == 64
     )
     {
+      console.log("pion noir en bout de ligne validé");
       return true;
-    }else if (piece.couleur.couleur=="blanc"
-      || caseDeDestination.no_case == 1
+    }else if (piece.type.includes("pion")
+      && piece.couleur.couleur=="blanc"
+      && caseDeDestination.no_case == 1
       || caseDeDestination.no_case == 9
       || caseDeDestination.no_case == 17
       || caseDeDestination.no_case == 25
@@ -253,14 +269,15 @@ export class CampNoirComponent implements OnInit {
       || caseDeDestination.no_case == 57
     )
     {
+      console.log("pion blanc en bout de ligne validé");
       return true;
     }
     else
     {
+      console.log("pas de pion en bout de ligne");
       return false;
     }
   }
-
 
 
 

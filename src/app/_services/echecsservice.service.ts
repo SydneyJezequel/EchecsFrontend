@@ -66,9 +66,11 @@ export class EchecsserviceService {
    * Méthode qui transforme un pion en pièce.
    * @param cases : string qui contient le nom de la pièce dans laquelle sera transformé le pion.
    */
+  /*
   transformerPion(caseDestination:CaseGet):Observable<CaseGet> {
     return this.http.put<CaseGet>(this.transformer, caseDestination);
   }
+  */
 
 
 
