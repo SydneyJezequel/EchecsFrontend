@@ -6,6 +6,7 @@ import {CasesDeplacement} from "../../../variables-globales/CasesDeplacement";
 import {ModalService} from "../../../_services/modal.service";
 import {Piece} from "../../../_model/Piece";
 import {TransformationPion} from "../../../variables-globales/TransformationPion";
+import {PieceGet} from "../../../_model/PieceGet";
 
 
 
@@ -186,8 +187,11 @@ export class CampBlancComponent implements OnInit {
     if(this.pionBoutEchiquier(typePiece, caseDeDestination))
     {
       this.modalService.open('modal-9');
+      this.transformationPion.pieceATransformer = piece;
+      console.log(" piece : " + piece.couleur.couleur);
+      console.log(" variable globale : " + this.transformationPion.pieceATransformer.couleur.couleur);
 
-      caseDeDestination.piece = piece;
+      caseDeDestination.piece = this.transformationPion.pieceTransforme
       console.log(caseDeDestination);
     }
     this.caseDeplacement.casesDeplacement.push(caseDeDestination);
@@ -238,46 +242,80 @@ export class CampBlancComponent implements OnInit {
    */
   public pionBoutEchiquier(typePiece:string, caseDeDestination:CaseGet)
   {
-    let pionBlanc:string = "pion blanc";
-    let pionNoir:string = "pion noir";
-    console.log("type de la pièce : " + typePiece);
-    console.log("pion blanc : " + pionBlanc);
-    console.log("pion noir : " + pionNoir);
     // Règles de contrôle pour transformer un pion
-    if(typePiece==pionNoir
-      && caseDeDestination.no_case == 8
+    if(typePiece=="pion noir"
+      && (caseDeDestination.no_case == 8
       || caseDeDestination.no_case == 16
       || caseDeDestination.no_case == 24
       || caseDeDestination.no_case == 32
       || caseDeDestination.no_case == 40
       || caseDeDestination.no_case == 48
       || caseDeDestination.no_case == 56
-      || caseDeDestination.no_case == 64
+      || caseDeDestination.no_case == 64)
     )
     {
-      console.log("pion noir en bout de ligne validé");
       return true;
-    }else if (typePiece==pionBlanc
-        && caseDeDestination.no_case == 1
+    }else if (typePiece=="pion blanc"
+        && (caseDeDestination.no_case == 1
         || caseDeDestination.no_case == 9
         || caseDeDestination.no_case == 17
         || caseDeDestination.no_case == 25
         || caseDeDestination.no_case == 33
         || caseDeDestination.no_case == 41
         || caseDeDestination.no_case == 49
-        || caseDeDestination.no_case == 57
+        || caseDeDestination.no_case == 57)
       )
       {
-        console.log("pion blanc en bout de ligne validé");
         return true;
       }
       else
       {
-        console.log("pas de pion en bout de ligne");
         return false;
       }
   }
 
+  /*
+    public pionBoutEchiquier(typePiece:string, caseDeDestination:CaseGet)
+  {
+    // Règles de contrôle pour transformer un pion
+    if(typePiece=="pion noir") {
+      if (caseDeDestination.no_case == 8
+        || caseDeDestination.no_case == 16
+        || caseDeDestination.no_case == 24
+        || caseDeDestination.no_case == 32
+        || caseDeDestination.no_case == 40
+        || caseDeDestination.no_case == 48
+        || caseDeDestination.no_case == 56
+        || caseDeDestination.no_case == 64) {
+        console.log("pion noir en bout de ligne validé");
+        return true;
+      }else
+      {
+        return false;
+      }
+    }
+      else if (typePiece=="pion blanc") {
+      if (caseDeDestination.no_case == 1
+        || caseDeDestination.no_case == 9
+        || caseDeDestination.no_case == 17
+        || caseDeDestination.no_case == 25
+        || caseDeDestination.no_case == 33
+        || caseDeDestination.no_case == 41
+        || caseDeDestination.no_case == 49
+        || caseDeDestination.no_case == 57) {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+      else
+      {
+        return false;
+      }
+  }
+   */
 
 
   /**

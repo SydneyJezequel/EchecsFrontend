@@ -1,11 +1,8 @@
 import {Injectable, NgModule} from '@angular/core';
 import {ModalComponent} from "../_components/modal/modal.component";
 import {EchecsserviceService} from "./echecsservice.service";
-import {CaseGet} from "../_model/CaseGet";
 import {TransformationPion} from "../variables-globales/TransformationPion";
-import {CasesDeplacement} from "../variables-globales/CasesDeplacement";
-import {Piece} from "../_model/Piece";
-import {PieceGet} from "../_model/PieceGet";
+
 
 
 /**
@@ -90,7 +87,7 @@ export class ModalService {
    * Méthode qui transforme un pion arrivé au bout de l'échiquier en nouvelle pièce.
    */
    public nouvellePiece(nouvellePiece:string){
-    this.transformationPion.transformationPion = nouvellePiece;
+    this.changementTypeDuPion(nouvellePiece);
     const modal = this.modals.find(x => x.isOpen);
     modal?.close();
    }
@@ -102,53 +99,60 @@ export class ModalService {
    * @param piece
    * @param caseDeDestination
    */
-  public changementTypeDuPion(piece:PieceGet, transformationPion:TransformationPion)
+  public changementTypeDuPion(nouvellePiece:string)
   {
-    if(piece.couleur.couleur=="blanc")
-    {
-      switch(transformationPion.transformationPion) {
+    console.log("changementTypeDuPion() déclenché");
+    console.log(" variable globale : ");
+    console.log(this.transformationPion.pieceATransformer.couleur.couleur);
+    console.log("test");
+    // Création de la nouvelle pièce par copie de la pièce :
+    this.transformationPion.pieceTransforme = this.transformationPion.pieceATransformer;
+    // Modification du type de la nouvelle pièce :
+    if(this.transformationPion.pieceATransformer.couleur.couleur=="blanc")
+    { console.log("pb couleur");
+      switch(nouvellePiece) {
         case "dame": {
-          piece.type = "reine blanc";
+          this.transformationPion.pieceTransforme.type = "reine blanc";
           break;
         }
         case "tour": {
-          piece.type = "tour blanc";
+          this.transformationPion.pieceTransforme.type = "tour blanc";
           break;
         }
         case "fou": {
-          piece.type = "fou blanc";
+          this.transformationPion.pieceTransforme.type = "fou blanc";
           break;
         }
         case "cavalier": {
-          piece.type = "cavalier blanc";
+          this.transformationPion.pieceTransforme.type = "cavalier blanc";
           break;
         }
         default: {
-          piece.type = "pion blanc";
+          this.transformationPion.pieceTransforme.type = "pion blanc";
           break;
         }
       }
     }else
     {
-      switch(transformationPion.transformationPion) {
+      switch(nouvellePiece) {
         case "dame": {
-          piece.type = "reine noir";
+          this.transformationPion.pieceTransforme.type = "reine noir";
           break;
         }
         case "tour": {
-          piece.type = "tour noir";
+          this.transformationPion.pieceTransforme.type = "tour noir";
           break;
         }
         case "fou": {
-          piece.type = "fou noir";
+          this.transformationPion.pieceTransforme.type = "fou noir";
           break;
         }
         case "cavalier": {
-          piece.type = "cavalier noir";
+          this.transformationPion.pieceTransforme.type = "cavalier noir";
           break;
         }
         default: {
-          piece.type = "pion noir";
+          this.transformationPion.pieceTransforme.type  = "pion noir";
           break;
         }
       }
