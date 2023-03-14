@@ -5,6 +5,7 @@ import { ModalService } from "./_services/modal.service";
 import {CaseGet} from "./_model/CaseGet";
 import {HttpErrorResponse} from "@angular/common/http";
 import {EchecsserviceService} from "./_services/echecsservice.service";
+import {MessageService} from "./_services/message.service";
 
 
 
@@ -32,11 +33,12 @@ export class AppComponent {
   showModeratorBoard = false;
   username?: string;
   camp!:string;
-  dame!:string;
-  tour!:string;
-  fou!:string;
-  cavalier!:string;
-  caseDestination!:CaseGet;
+  dame:string = "dame";
+  tour:string = "tour";
+  fou:string = "fou";
+  cavalier:string = "cavalier";
+
+
 
 
 
@@ -50,7 +52,8 @@ export class AppComponent {
   constructor(private storageService: StorageService,
               private authService: AuthService,
               public modalService: ModalService,
-              private echecsservice:EchecsserviceService) { }
+              private echecsservice:EchecsserviceService,
+              private messageService:MessageService) { }
 
 
 

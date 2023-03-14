@@ -19,6 +19,7 @@ export class EchecsserviceService {
   private reinitialize:string="api/nouvelle_partie/"
   private refresh:string="api/echiquier/"
   private deplacer:string="api/deplacer"
+  private echecAuRoi:string="api/echec_au_roi"
   private transformer:string="api/transformer"
 
 
@@ -58,6 +59,15 @@ export class EchecsserviceService {
    */
   deplacerPiece(cases:CaseGet[]):Observable<CaseGet[]> {
     return this.http.put<CaseGet[]>(this.deplacer, cases);
+  }
+
+
+
+  /**
+   * Méthode qui contrôle si le roi et en échec (échec au roi ou échec et mat).
+   */
+  controleEchecAuRoi():Observable<number> {
+    return this.http.get<number>(this.echecAuRoi);
   }
 
 

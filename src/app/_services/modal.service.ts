@@ -2,6 +2,11 @@ import {Injectable, NgModule} from '@angular/core';
 import {ModalComponent} from "../_components/modal/modal.component";
 import {EchecsserviceService} from "./echecsservice.service";
 import {TransformationPion} from "../variables-globales/TransformationPion";
+import {MessageService} from "./message.service";
+import {Observable, Subscription} from "rxjs";
+import {CampBlancComponent} from "../_components/echecs/camp-blanc/camp-blanc.component";
+import {Piece} from "../_model/Piece";
+
 
 
 
@@ -20,9 +25,18 @@ export class ModalService {
   /******************************* Attributs *******************************/
 
   private modals: ModalComponent[] = [];
+  public subscription!:Subscription;
+  public pieceTransforme!:Piece;
+
+
+
+
+  /******************************* Constructeur *******************************/
+
   constructor(private echecsservice:EchecsserviceService,
               private transformationPion:TransformationPion,
-  ) { }
+              private messageService:MessageService) { }
+
 
 
 
@@ -87,48 +101,60 @@ export class ModalService {
    * Méthode qui transforme un pion arrivé au bout de l'échiquier en nouvelle pièce.
    */
    public nouvellePiece(nouvellePiece:string){
-    this.changementTypeDuPion(nouvellePiece);
+    this.messageService.sendMessage(nouvellePiece);
+    // this.messageService.nouvellePiece = nouvellePiece;
     const modal = this.modals.find(x => x.isOpen);
     modal?.close();
    }
 
 
 
+
+  // **************** SERVICE SIMPLE ****************
+  // VERSION DE LA METHODE QUI UTILISE UN SERVICE MAIS PAS D'OBSERVABLE :
   /**
    * Méthode qui change le type du pion.
-   * @param piece
-   * @param caseDeDestination
+   * @param nouvellePiece : type de pièce choisi.
    */
-  public changementTypeDuPion(nouvellePiece:string)
+  /*
+  public changementTypeDuPion(nouvellePiece:String)
   {
-    console.log("changementTypeDuPion() déclenché");
-    console.log(" variable globale : ");
-    console.log(this.transformationPion.pieceATransformer.couleur.couleur);
-    console.log("test");
-    // Création de la nouvelle pièce par copie de la pièce :
-    this.transformationPion.pieceTransforme = this.transformationPion.pieceATransformer;
+
+    this.messageService.pieceTransforme = this.messageService.pieceATransformer;
+    // **************** TEST ****************
+    console.log( "messageService.pieceTransforme : "+
+      this.messageService.pieceTransforme.type +
+      this.messageService.pieceTransforme.couleur.couleur +
+      this.messageService.pieceTransforme.statut
+    );
+    // **************** TEST ****************
+    this.messageService.accessMessage();
+
     // Modification du type de la nouvelle pièce :
-    if(this.transformationPion.pieceATransformer.couleur.couleur=="blanc")
-    { console.log("pb couleur");
+    if(this.messageService.pieceATransformer.couleur.couleur=="blanc")
+    {
       switch(nouvellePiece) {
         case "dame": {
-          this.transformationPion.pieceTransforme.type = "reine blanc";
+          this.messageService.pieceTransforme.type = "reine blanc";
+          // **************** TEST ****************
+          console.log("type nouvelle pièce"+this.messageService.pieceTransforme.type);
+          // **************** TEST ****************
           break;
         }
         case "tour": {
-          this.transformationPion.pieceTransforme.type = "tour blanc";
+          this.messageService.pieceTransforme.type = "tour blanc";
           break;
         }
         case "fou": {
-          this.transformationPion.pieceTransforme.type = "fou blanc";
+          this.messageService.pieceTransforme.type = "fou blanc";
           break;
         }
         case "cavalier": {
-          this.transformationPion.pieceTransforme.type = "cavalier blanc";
+          this.messageService.pieceTransforme.type = "cavalier blanc";
           break;
         }
         default: {
-          this.transformationPion.pieceTransforme.type = "pion blanc";
+          this.messageService.pieceTransforme.type = "pion blanc";
           break;
         }
       }
@@ -136,28 +162,30 @@ export class ModalService {
     {
       switch(nouvellePiece) {
         case "dame": {
-          this.transformationPion.pieceTransforme.type = "reine noir";
+          this.messageService.pieceTransforme.type = "reine noir";
           break;
         }
         case "tour": {
-          this.transformationPion.pieceTransforme.type = "tour noir";
+          this.messageService.pieceTransforme.type = "tour noir";
           break;
         }
         case "fou": {
-          this.transformationPion.pieceTransforme.type = "fou noir";
+          this.messageService.pieceTransforme.type = "fou noir";
           break;
         }
         case "cavalier": {
-          this.transformationPion.pieceTransforme.type = "cavalier noir";
+          this.messageService.pieceTransforme.type = "cavalier noir";
           break;
         }
         default: {
-          this.transformationPion.pieceTransforme.type  = "pion noir";
+          this.messageService.pieceTransforme.type  = "pion noir";
           break;
         }
       }
     }
   }
+  */
+  // **************** SERVICE SIMPLE ****************
 
 
 
