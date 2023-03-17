@@ -218,6 +218,7 @@ export class CampBlancComponent implements OnInit {
     let piece = this.caseDeplacement.casesDeplacement[0].piece;
     let typePiece: string = this.caseDeplacement.casesDeplacement[0].piece.type;
     let test;
+
     if (this.pionBoutEchiquier(typePiece, caseDeDestination)) {
       // **************** SERVICE SIMPLE ****************
       /*
