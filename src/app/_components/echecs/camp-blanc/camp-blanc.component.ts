@@ -6,7 +6,6 @@ import {CasesDeplacement} from "../../../variables-globales/CasesDeplacement";
 import {ModalService} from "../../../_services/modal.service";
 import {Piece} from "../../../_model/Piece";
 import {TransformationPion} from "../../../variables-globales/TransformationPion";
-import {PieceGet} from "../../../_model/PieceGet";
 import {Observable, Subject, Subscription} from 'rxjs';
 import {MessageService} from "../../../_services/message.service";
 
@@ -37,8 +36,8 @@ export class CampBlancComponent implements OnInit {
   public pieceTransforme!:Piece;
   public nouvellePiece!:string;
   public subject = new Subject<string>();
-  public roiEnEchec!:number;
-
+  public roiEnEchec!:boolean;
+  public campQuiJoue!:string;
 
 
 
@@ -153,34 +152,35 @@ export class CampBlancComponent implements OnInit {
    * @param i : case sélectionnée.
    */
   public deplacement(i: CaseGet) {
+
     // 1 - Sélection de la case de Départ et de la case d'arrivée :
     if (!this.caseDeplacement.casesDeplacement.length) {
       this.selectCaseDepart(i);
-      // TEST :
+      // ******* TEST *******
       console.log(i);
-      // TEST :
+      // ******* TEST *******
     } else {
       this.selectCaseDestination(i);
-      // TEST :
+      // ******* TEST *******
       console.log(i);
-      // TEST :
-      this.echecsservice.deplacerPiece(this.caseDeplacement.casesDeplacement).subscribe(
-        (response: CaseGet[]) => {
-          this.cases = response;
-          // Tri des cases :
-          this.cases.sort(function compare(a, b) {
-            if (a.no_case < b.no_case)
-              return -1;
-            if (a.no_case > b.no_case)
-              return 1;
-            return 0;
+      // ******* TEST *******
+        this.echecsservice.deplacerPiece(this.caseDeplacement.casesDeplacement).subscribe(
+          (response: CaseGet[]) => {
+            this.cases = response;
+            // Tri des cases :
+            this.cases.sort(function compare(a, b) {
+              if (a.no_case < b.no_case)
+                return -1;
+              if (a.no_case > b.no_case)
+                return 1;
+              return 0;
+            });
+          }, (error: HttpErrorResponse) => {
+            alert(error.message);
           });
-        },(error:HttpErrorResponse) =>
-        {
-          alert(error.message);
-        });
-      this.caseDeplacement.casesDeplacement = [];
-      this.echecAuRoi();
+        // 4- Déclenchement de la pop-up échec au roi :
+        this.echecAuRoi(this.caseDeplacement.casesDeplacement);
+        this.caseDeplacement.casesDeplacement = [];
     }
   }
 
@@ -194,13 +194,30 @@ export class CampBlancComponent implements OnInit {
     // 1- Sélectionner la pièce :
     let caseDeDepart = this.selectCase(i);
     let pieceADeplacer = this.selectPiece(i);
+    let couleurCampQuiJoue = this.recuperationCampQuiJoue();
+    let couleurPieceDeplace;
+    // 1 - S'il n'y a pas de pièce sur la case sélectionnée
     if (pieceADeplacer == null){
       this.modalService.open('modal-6');
-    } else {
+    }
+    else
+    {
+      couleurPieceDeplace = pieceADeplacer.couleur.couleur;
+      // 2 - Contrôle du camp qui joue
+      console.log("camp qui joue fonction : " + this.recuperationCampQuiJoue());
+      console.log("camp qui joue : "+couleurCampQuiJoue);
+      console.log("pièce déplacée : " + couleurPieceDeplace);
+      if(couleurCampQuiJoue == couleurPieceDeplace)
+      {
+        this.modalService.open('modal-12');
+      }
+    else
+    {
       this.caseDeplacement.casesDeplacement.push(this.selectCase(i));
       this.modalService.open('modal-7');
-      // 2- Sélectionner la case de destination et déplacer la pièce :
+      // 3- Sélectionner la case de destination et déplacer la pièce :
       return this.caseDeplacement.casesDeplacement;
+    }
     }
     return null;
   }
@@ -552,30 +569,55 @@ export class CampBlancComponent implements OnInit {
 
 
 
+
   /**
    * Méthode qui déclenche la pop-up Echec au Roi.
    */
-  public echecAuRoi()
+// NOUVELLE VERSION DE LA METHODE :
+  public echecAuRoi(casesDeplacement:CaseGet[])
   {
-    this.echecsservice.controleEchecAuRoi().subscribe(
-      (response: number) => {
+    this.echecsservice.controleEchecAuRoi(casesDeplacement).subscribe(
+      (response: boolean) => {
         this.roiEnEchec = response;
-    });
-    switch(this.roiEnEchec) {
-        case 1 : {
+        // TEST :
+        console.log(this.roiEnEchec);
+        // TEST :
+        if(this.roiEnEchec) {
+          console.log("modal-10 déclenché.");
           this.modalService.open('modal-10');
-          break;
         }
-        case 2 : {
-          this.modalService.open('modal-11');
-          break;
-        }
-        default: {
-          // Le roi n'est pas en échec.
-          break;
-        }
-      }
+    });
   }
+
+
+
+
+  /**
+   * Méthode qui récupère le camp qui joue.
+   */
+  public recuperationCampQuiJoue():any
+  {
+    this.echecsservice.controleCampQuiJoue().subscribe(
+      (response: boolean) => {
+      console.log("si camp blanc TRUE / si camp noir FALSE : "+response);
+      if(response)
+      {
+        return "blanc";
+      }
+      else
+      {
+        return "noir";
+      }
+    });
+    //
+    // console.log("test camp qui joue : "+this.campQuiJoue)
+    // return this.campQuiJoue;
+  }
+
+
+
+
+
 
 
 }
