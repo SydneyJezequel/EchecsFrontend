@@ -37,7 +37,12 @@ export class CampBlancComponent implements OnInit {
   public nouvellePiece!:string;
   public subject = new Subject<string>();
   public roiEnEchec!:boolean;
-  public campQuiJoue!:string;
+  public couleurCamp!:boolean;
+  public campQuiDoiJouer!:string;
+
+
+
+
 
 
 
@@ -58,6 +63,7 @@ export class CampBlancComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEchecquierReInitialise();
+    this.recuperationCampQuiJoue();
 
     /***************** Observables *****************/
     /*
@@ -146,6 +152,16 @@ export class CampBlancComponent implements OnInit {
   }
 
 
+/*
+  public deplacementEtMiseAJourDuCampQuiJoue(i: CaseGet)
+  {
+    this.deplacement(i);
+    console.log("mise à jour du déplacement de la pièce");
+
+    )
+  }
+*/
+
 
   /**
    * Méthode qui permet de déplacer une pièce
@@ -164,8 +180,8 @@ export class CampBlancComponent implements OnInit {
       // ******* TEST *******
       console.log(i);
       // ******* TEST *******
-        this.echecsservice.deplacerPiece(this.caseDeplacement.casesDeplacement).subscribe(
-          (response: CaseGet[]) => {
+        this.echecsservice.deplacerPiece(this.caseDeplacement.casesDeplacement).subscribe({
+          next: response => {
             this.cases = response;
             // Tri des cases :
             this.cases.sort(function compare(a, b) {
@@ -175,12 +191,15 @@ export class CampBlancComponent implements OnInit {
                 return 1;
               return 0;
             });
-          }, (error: HttpErrorResponse) => {
-            alert(error.message);
-          });
+          }, error:err => {
+            alert(err.message);
+          }});
         // 4- Déclenchement de la pop-up échec au roi :
         this.echecAuRoi(this.caseDeplacement.casesDeplacement);
         this.caseDeplacement.casesDeplacement = [];
+        setTimeout(() =>{
+          this.recuperationCampQuiJoue()
+        },1000);
     }
   }
 
@@ -191,24 +210,26 @@ export class CampBlancComponent implements OnInit {
    * @param i : case de départ sélectionnée.
    */
   public selectCaseDepart(i: CaseGet) {
+
     // 1- Sélectionner la pièce :
     let caseDeDepart = this.selectCase(i);
     let pieceADeplacer = this.selectPiece(i);
-    let couleurCampQuiJoue = this.recuperationCampQuiJoue();
     let couleurPieceDeplace;
-    // 1 - S'il n'y a pas de pièce sur la case sélectionnée
-    if (pieceADeplacer == null){
+    console.log("test camp qui joue : "+this.campQuiJoue());
+
+    // 2- Contrôles préalable au déplacement :
+    // Est-ce qu'une pièce a été sélectionnée ?
+    if (!pieceADeplacer){
       this.modalService.open('modal-6');
     }
+    // Est-ce que la pièce déplacée appartient au camp qui doit jouer ?
     else
     {
       couleurPieceDeplace = pieceADeplacer.couleur.couleur;
-      // 2 - Contrôle du camp qui joue
-      console.log("camp qui joue fonction : " + this.recuperationCampQuiJoue());
-      console.log("camp qui joue : "+couleurCampQuiJoue);
       console.log("pièce déplacée : " + couleurPieceDeplace);
-      if(couleurCampQuiJoue == couleurPieceDeplace)
+      if(this.campQuiJoue() != couleurPieceDeplace)
       {
+        console.log("BLOCAGE DECLENCHE");
         this.modalService.open('modal-12');
       }
     else
@@ -580,7 +601,7 @@ export class CampBlancComponent implements OnInit {
       (response: boolean) => {
         this.roiEnEchec = response;
         // TEST :
-        console.log(this.roiEnEchec);
+        console.log("Roi en échec : "+this.roiEnEchec);
         // TEST :
         if(this.roiEnEchec) {
           console.log("modal-10 déclenché.");
@@ -595,25 +616,59 @@ export class CampBlancComponent implements OnInit {
   /**
    * Méthode qui récupère le camp qui joue.
    */
-  public recuperationCampQuiJoue():any
+  public recuperationCampQuiJoue():void
   {
-    this.echecsservice.controleCampQuiJoue().subscribe(
-      (response: boolean) => {
-      console.log("si camp blanc TRUE / si camp noir FALSE : "+response);
-      if(response)
-      {
-        return "blanc";
-      }
-      else
-      {
-        return "noir";
-      }
+    this.echecsservice.controleCampQuiJoue().subscribe({
+      next:response => {
+        this.couleurCamp = response;
+        console.log("check booléen : "+response);
+      },
+      error:err => {
+        console.log(err);
+      },
+      complete:()=>{
+    this.campQuiJoue();
+    }
     });
-    //
-    // console.log("test camp qui joue : "+this.campQuiJoue)
-    // return this.campQuiJoue;
   }
 
+
+  /**
+   * Méthode qui renvoie un String.
+   */
+  campQuiJoue():string
+  {
+    return this.couleurCamp?"blanc":"noir";
+    /*
+    if(this.couleurCamp)
+    {
+      this.campQuiDoiJouer = "blanc";
+    }
+    else
+    {
+      this.campQuiDoiJouer = "noir";
+    }
+    */
+    // console.log("couleur renvoyée"+this.campQuiDoiJouer);
+    // return this.campQuiDoiJouer;
+  }
+  /*
+    public recuperationCampQuiJoue():void
+  {
+    this.echecsservice.controleCampQuiJoue().subscribe({
+      next:response => {
+        this.couleurCamp = response;
+        console.log("booléen récupéré"+response);
+      },
+      error:err => {
+        console.log(err);
+      },
+      complete:()=>{
+    this.campQuiJoue();
+    }
+    });
+  }
+  */
 
 
 
