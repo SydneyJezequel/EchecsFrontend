@@ -11,6 +11,8 @@ import {MessageService} from "../../../_services/message.service";
 
 
 
+
+
 /**
  * Ce composant gère l'échiquier dans le camp blanc.
  */
@@ -39,8 +41,6 @@ export class CampBlancComponent implements OnInit {
   public roiEnEchec!:boolean;
   public couleurCamp!:boolean;
   public campQuiDoiJouer!:string;
-
-
 
 
 
@@ -99,7 +99,8 @@ export class CampBlancComponent implements OnInit {
   /**
    * Méthode qui ré-initialise l'échecquier pour commencer une nouvelle partie.
    */
-  public getEchecquierReInitialise(): void {
+  public getEchecquierReInitialise(): void
+  {
     this.echecsservice.getEchequierReInitialise(this.blanc).subscribe(
       (response: CaseGet[]) => {
         // *************** TEST ***************
@@ -118,7 +119,8 @@ export class CampBlancComponent implements OnInit {
         console.log(this.casesGet);
         console.log("Echiquier récupéré");
       },
-      (error: HttpErrorResponse) => {
+      (error: HttpErrorResponse) =>
+      {
         alert(error.message);
       }
     )
@@ -140,10 +142,6 @@ export class CampBlancComponent implements OnInit {
             return 1;
           return 0;
         });
-        // console.log( + this.cases);
-        // TEST :
-        console.log("Valeur mise à jour :");
-        console.log(this.cases);
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -152,15 +150,6 @@ export class CampBlancComponent implements OnInit {
   }
 
 
-/*
-  public deplacementEtMiseAJourDuCampQuiJoue(i: CaseGet)
-  {
-    this.deplacement(i);
-    console.log("mise à jour du déplacement de la pièce");
-
-    )
-  }
-*/
 
 
   /**
@@ -245,6 +234,7 @@ export class CampBlancComponent implements OnInit {
 
 
 
+
   // NOUVELLE VERSION DE LA METHODE :
   /**
    * Méthode qui récupère la case de destination
@@ -316,8 +306,6 @@ export class CampBlancComponent implements OnInit {
       return this.caseDeplacement.casesDeplacement;
     }
   }
-
-
 
 
 
@@ -409,8 +397,6 @@ export class CampBlancComponent implements OnInit {
       }
     }
   }
-
-
   // ANCIENNE VERSION DE LA METHODE :
   /*
     public selectCaseDestination(i: CaseGet) {
@@ -422,6 +408,8 @@ export class CampBlancComponent implements OnInit {
   */
 
 
+
+
   /**
    * Méthode qui sélectionne une pièce à partir de sa case.
    * @param i : case sélectionnée
@@ -430,6 +418,7 @@ export class CampBlancComponent implements OnInit {
   {
     return i.piece;
   }
+
 
 
 
@@ -528,6 +517,7 @@ export class CampBlancComponent implements OnInit {
 
 
 
+
   /**
    * Méthode qui change le type du pion.
    * @param piece
@@ -594,7 +584,6 @@ export class CampBlancComponent implements OnInit {
   /**
    * Méthode qui déclenche la pop-up Echec au Roi.
    */
-// NOUVELLE VERSION DE LA METHODE :
   public echecAuRoi(casesDeplacement:CaseGet[])
   {
     this.echecsservice.controleEchecAuRoi(casesDeplacement).subscribe(
@@ -633,6 +622,8 @@ export class CampBlancComponent implements OnInit {
   }
 
 
+
+
   /**
    * Méthode qui renvoie un String.
    */
@@ -669,7 +660,6 @@ export class CampBlancComponent implements OnInit {
     });
   }
   */
-
 
 
 

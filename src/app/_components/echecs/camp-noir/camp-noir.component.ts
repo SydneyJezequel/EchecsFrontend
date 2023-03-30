@@ -7,6 +7,11 @@ import {CasesDeplacement} from "../../../variables-globales/CasesDeplacement";
 import {ModalService} from "../../../_services/modal.service";
 import {Piece} from "../../../_model/Piece";
 import {TransformationPion} from "../../../variables-globales/TransformationPion";
+import {Subject, Subscription} from "rxjs";
+import {MessageService} from "../../../_services/message.service";
+
+
+
 
 
 /**
@@ -16,9 +21,10 @@ import {TransformationPion} from "../../../variables-globales/TransformationPion
   selector: 'app-camp-noir',
   templateUrl: './camp-noir.component.html',
   styleUrls: ['./camp-noir.component.scss'],
-  providers: [CasesDeplacement]
+  providers: [CasesDeplacement, TransformationPion]
 })
 export class CampNoirComponent implements OnInit {
+
 
 
 
@@ -29,16 +35,26 @@ export class CampNoirComponent implements OnInit {
   public numbers = [1,2,3,4,5,6,7,8];
   public case!:Case;
   public noir:String="noir";
+  public subscription!:Subscription;
+  public pieceTransforme!:Piece;
+  public nouvellePiece!:string;
+  public subject = new Subject<string>();
+  public roiEnEchec!:boolean;
+  public couleurCamp!:boolean;
+  public campQuiDoiJouer!:string;
+
 
 
 
 
   /******************************* Constructeur *******************************/
 
-  constructor(private echecsservice:EchecsserviceService,
+  constructor(private echecsservice: EchecsserviceService,
               private caseDeplacement:CasesDeplacement,
               private modalService: ModalService,
-              private transformationPion:TransformationPion) { }
+              private transformationPion:TransformationPion,
+              private messageService:MessageService) { }
+
 
 
 
@@ -47,7 +63,20 @@ export class CampNoirComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEchecquierReInitialise();
+    this.recuperationCampQuiJoue();
+
+    /***************** Observables *****************/
+    /*
+    this.subscription = this.messageService.accessMessage().subscribe(
+      (response) => {
+       this.pieceTransforme = (<Piece>response);
+      }
+    );
+    */
+    /***************** Observables *****************/
+
   }
+
 
 
 
@@ -84,6 +113,7 @@ export class CampNoirComponent implements OnInit {
 
 
 
+
   /**
    * Méthode qui renvoie l'échequier.
    */
@@ -110,25 +140,26 @@ export class CampNoirComponent implements OnInit {
 
 
 
+
   /**
    * Méthode qui permet de déplacer une pièce
    * @param i : case sélectionnée.
    */
   public deplacement(i: CaseGet) {
-    console.log("numéro de la case : "+i.no_case);
+
     // 1 - Sélection de la case de Départ et de la case d'arrivée :
     if (!this.caseDeplacement.casesDeplacement.length) {
       this.selectCaseDepart(i);
-      // TEST :
+      // ******* TEST *******
       console.log(i);
-      // TEST :
+      // ******* TEST *******
     } else {
       this.selectCaseDestination(i);
-      // TEST :
+      // ******* TEST *******
       console.log(i);
-      // TEST :
-      this.echecsservice.deplacerPiece(this.caseDeplacement.casesDeplacement).subscribe(
-        (response: CaseGet[]) => {
+      // ******* TEST *******
+      this.echecsservice.deplacerPiece(this.caseDeplacement.casesDeplacement).subscribe({
+        next: response => {
           this.cases = response;
           // Tri des cases :
           this.cases.sort(function compare(a, b) {
@@ -138,16 +169,18 @@ export class CampNoirComponent implements OnInit {
               return 1;
             return 0;
           });
-        },(error:HttpErrorResponse) =>
-      {
-        alert(error.message);
-      });
-      // TEST :
-      console.log(this.cases);
-      // TEST :
+        }, error:err => {
+          alert(err.message);
+        }});
+      // 4- Déclenchement de la pop-up échec au roi :
+      this.echecAuRoi(this.caseDeplacement.casesDeplacement);
       this.caseDeplacement.casesDeplacement = [];
+      setTimeout(() =>{
+        this.recuperationCampQuiJoue()
+      },1000);
     }
   }
+
 
 
 
@@ -156,56 +189,211 @@ export class CampNoirComponent implements OnInit {
    * @param i : case de départ sélectionnée.
    */
   public selectCaseDepart(i: CaseGet) {
-      // 1- Sélectionner la pièce :
-      let caseDeDepart = this.selectCase(i);
-      let pieceADeplacer = this.selectPiece(i);
-      if (pieceADeplacer == null){
-        this.modalService.open('modal-6');
-      } else {
+
+    // 1- Sélectionner la pièce :
+    let caseDeDepart = this.selectCase(i);
+    let pieceADeplacer = this.selectPiece(i);
+    let couleurPieceDeplace;
+    console.log("test camp qui joue : "+this.campQuiJoue());
+
+    // 2- Contrôles préalable au déplacement :
+    // Est-ce qu'une pièce a été sélectionnée ?
+    if (!pieceADeplacer){
+      this.modalService.open('modal-6');
+    }
+    // Est-ce que la pièce déplacée appartient au camp qui doit jouer ?
+    else
+    {
+      couleurPieceDeplace = pieceADeplacer.couleur.couleur;
+      console.log("pièce déplacée : " + couleurPieceDeplace);
+      if(this.campQuiJoue() != couleurPieceDeplace)
+      {
+        console.log("BLOCAGE DECLENCHE");
+        this.modalService.open('modal-12');
+      }
+      else
+      {
         this.caseDeplacement.casesDeplacement.push(this.selectCase(i));
         this.modalService.open('modal-7');
-        // 2- Sélectionner la case de destination et déplacer la pièce :
+        // 3- Sélectionner la case de destination et déplacer la pièce :
         return this.caseDeplacement.casesDeplacement;
       }
-      return null;
+    }
+    return null;
   }
 
 
 
 
-  // NOUVELLE VERSION DE LA METHODE :
   /**
    * Méthode qui récupère la case de destination
    * @param i : case de destination sélectionnée.
    */
-  /*
-  public selectCaseDestination(i: CaseGet) {
+  public async selectCaseDestination(i: CaseGet) {
     // 1- Sélectionner la case de destination et déplacer la pièce :
     let caseDeDestination = this.selectCase(i);
     let piece = this.caseDeplacement.casesDeplacement[0].piece;
-    let typePiece:string = this.caseDeplacement.casesDeplacement[0].piece.type;
-    if(this.pionBoutEchiquier(typePiece, caseDeDestination))
-    {
-      this.modalService.open('modal-9');
+    let typePiece: string = this.caseDeplacement.casesDeplacement[0].piece.type;
+    let test;
 
-      caseDeDestination.piece = piece;
-      console.log(caseDeDestination);
+    if (this.pionBoutEchiquier(typePiece, caseDeDestination)) {
+      // **************** SERVICE SIMPLE ****************
+      /*
+      // chargement de la pièce dans le service :
+      this.messageService.pieceATransformer = piece;
+      // Pop-up du choix du pion :
+      this.modalService.open('modal-9');
+      // Modification du pion :
+      console.log(this.messageService.nouvellePiece);
+      this.changementTypeDuPion(this.messageService.nouvellePiece);
+      // Ajout de la pièce dans la caseDeDestination :
+      console.log(caseDeDestination.piece);
+      caseDeDestination.piece = this.messageService.pieceTransforme;
+      // Ajout de la caseDeDestination dans l'array CaseDeplacement.
+      this.caseDeplacement.casesDeplacement.push(caseDeDestination);
+      return this.caseDeplacement.casesDeplacement;
+      */
+      // **************** SERVICE SIMPLE ****************
+
+
+      // **************** OBSERVABLE ****************
+
+      // ANCIENNE VERSION DE L'OBSERVABLE :
+      /*
+      // Pop-up du choix du pion :
+      this.modalService.open('modal-9');
+      // Récupération du choix de pièce :
+      let nouvellePiece = this.messageService.accessMessage();
+      console.log(nouvellePiece);
+      // Changement de la pièce :
+      this.changementTypeDuPion(nouvellePiece);
+      // Ajout de la pièce transformée dans la case de destination :
+      caseDeDestination.piece = this.pieceTransforme;
+      console.log(caseDeDestination.piece);
+      // Ajout da la case de destination dans l'Array caseDeplacement :
+      this.caseDeplacement.casesDeplacement.push(caseDeDestination);
+      console.log(this.caseDeplacement);
+      return this.caseDeplacement.casesDeplacement;
+      */
+
+      // NOUVELLE VERSION DE L'OBSERVABLE :
+      // Pop-up du choix du pion :
+      this.modalService.open('modal-9');
+      console.log(this.loadComponents());
+      test = await this.loadComponents();
+      console.log(test);
+      this.changementTypeDuPion(test);
+      caseDeDestination.piece = this.pieceTransforme;
+      this.caseDeplacement.casesDeplacement.push(caseDeDestination);
+      console.log(this.caseDeplacement);
+      return this.caseDeplacement.casesDeplacement;
+      // Renvoie de l'Array caseDeplacement :
+      return this.caseDeplacement.casesDeplacement;
+      // **************** OBSERVABLE ****************
+    } else {
+      this.caseDeplacement.casesDeplacement.push(caseDeDestination);
+      return this.caseDeplacement.casesDeplacement;
     }
-    this.caseDeplacement.casesDeplacement.push(caseDeDestination);
-    return this.caseDeplacement.casesDeplacement;
   }
+
+
+
+
+  // METHODE ASYNCHRONE :
+  loadComponents() {
+    return new Promise<string>((resolve) => {
+      resolve(this.messageService.accessMessage());
+    });
+  }
+  /*
+  let nouvellePiece = Promise.resolve(this.messageService.accessMessage());
+  console.log(nouvellePiece);
+  this.changementTypeDuPion(await nouvellePiece);
+  caseDeDestination.piece = this.pieceTransforme;
+  this.caseDeplacement.casesDeplacement.push(caseDeDestination);
+  console.log(this.caseDeplacement);
+  return this.caseDeplacement.casesDeplacement;
   */
 
 
 
 
-  // ANCIENNE VERSION DE LA METHODE :
-  public selectCaseDestination(i: CaseGet) {
-    // 1- Sélectionner la case de destination et déplacer la pièce :
-    let caseDeDestination = this.selectCase(i);
-    this.caseDeplacement.casesDeplacement.push(caseDeDestination);
-    return this.caseDeplacement.casesDeplacement;
+  /**
+   * Méthode qui change le type du pion.
+   * @param nouvellePiece : type de pièce choisi.
+   */
+  public changementTypeDuPion(nouvellePiece:string)
+  {
+    // Modification du type de la nouvelle pièce :
+    if(this.pieceTransforme.couleur.couleur=="blanc")
+    {
+      switch(nouvellePiece) {
+        case "dame": {
+          this.pieceTransforme.type = "reine blanc";
+          console.log("type nouvelle pièce"+this.pieceTransforme.type);
+          break;
+        }
+        case "tour": {
+          this.pieceTransforme.type = "tour blanc";
+          // this.messageService.sendMessage(this.pieceTransforme);
+          break;
+        }
+        case "fou": {
+          this.pieceTransforme.type = "fou blanc";
+          // this.messageService.sendMessage(this.pieceTransforme);
+          break;
+        }
+        case "cavalier": {
+          this.pieceTransforme.type = "cavalier blanc";
+          // this.messageService.sendMessage(this.pieceTransforme);
+          break;
+        }
+        default: {
+          this.pieceTransforme.type = "pion blanc";
+          // this.messageService.sendMessage(this.pieceTransforme);
+          break;
+        }
+      }
+    }else
+    {
+      switch(nouvellePiece) {
+        case "dame": {
+          this.pieceTransforme.type = "reine noir";
+          // this.messageService.sendMessage(this.pieceTransforme);
+          break;
+        }
+        case "tour": {
+          this.pieceTransforme.type = "tour noir";
+          // this.messageService.sendMessage(this.pieceTransforme);
+          break;
+        }
+        case "fou": {
+          this.pieceTransforme.type = "fou noir";
+          // this.messageService.sendMessage(this.pieceTransforme);
+          break;
+        }
+        case "cavalier": {
+          this.pieceTransforme.type = "cavalier noir";
+          // this.messageService.sendMessage(this.pieceTransforme);
+          break;
+        }
+        default: {
+          this.pieceTransforme.type  = "pion noir";
+          // this.messageService.sendMessage(this.pieceTransforme);
+          break;
+        }
+      }
+    }
   }
+  // ANCIENNE VERSION DE LA METHODE :
+  /*
+    public selectCaseDestination(i: CaseGet) {
+      // 1- Sélectionner la case de destination et déplacer la pièce :
+      let caseDeDestination = this.selectCase(i);
+      this.caseDeplacement.casesDeplacement.push(caseDeDestination);
+      return this.caseDeplacement.casesDeplacement;
+  }
+  */
 
 
 
@@ -221,6 +409,7 @@ export class CampNoirComponent implements OnInit {
 
 
 
+
   /**
    * Méthode qui sélectionne et renvoie une case.
    * @param i
@@ -232,52 +421,239 @@ export class CampNoirComponent implements OnInit {
 
 
 
+
   /**
    * Méthode qui identifie si un pion est arrivé au bout de l'échiquier.
    * @param piece
    * @param caseDeDestination
    */
-  public pionBoutEchiquier(piece:Piece, caseDeDestination:CaseGet)
+  public pionBoutEchiquier(typePiece:string, caseDeDestination:CaseGet)
   {
-    console.log("pion au bout de l'échiquier : ");
-    console.log(piece);
-    console.log(caseDeDestination);
     // Règles de contrôle pour transformer un pion
-    if(piece.type.includes("pion")
-      && piece.couleur.couleur=="noir"
-      && caseDeDestination.no_case == 8
-      || caseDeDestination.no_case == 16
-      || caseDeDestination.no_case == 24
-      || caseDeDestination.no_case == 32
-      || caseDeDestination.no_case == 40
-      || caseDeDestination.no_case == 48
-      || caseDeDestination.no_case == 56
-      || caseDeDestination.no_case == 64
+    if(typePiece=="pion noir"
+      && (caseDeDestination.no_case == 8
+        || caseDeDestination.no_case == 16
+        || caseDeDestination.no_case == 24
+        || caseDeDestination.no_case == 32
+        || caseDeDestination.no_case == 40
+        || caseDeDestination.no_case == 48
+        || caseDeDestination.no_case == 56
+        || caseDeDestination.no_case == 64)
     )
     {
-      console.log("pion noir en bout de ligne validé");
       return true;
-    }else if (piece.type.includes("pion")
-      && piece.couleur.couleur=="blanc"
-      && caseDeDestination.no_case == 1
-      || caseDeDestination.no_case == 9
-      || caseDeDestination.no_case == 17
-      || caseDeDestination.no_case == 25
-      || caseDeDestination.no_case == 33
-      || caseDeDestination.no_case == 41
-      || caseDeDestination.no_case == 49
-      || caseDeDestination.no_case == 57
+    }else if (typePiece=="pion blanc"
+      && (caseDeDestination.no_case == 1
+        || caseDeDestination.no_case == 9
+        || caseDeDestination.no_case == 17
+        || caseDeDestination.no_case == 25
+        || caseDeDestination.no_case == 33
+        || caseDeDestination.no_case == 41
+        || caseDeDestination.no_case == 49
+        || caseDeDestination.no_case == 57)
     )
     {
-      console.log("pion blanc en bout de ligne validé");
       return true;
     }
     else
     {
-      console.log("pas de pion en bout de ligne");
       return false;
     }
   }
+
+
+
+
+  /*
+    public pionBoutEchiquier(typePiece:string, caseDeDestination:CaseGet)
+  {
+    // Règles de contrôle pour transformer un pion
+    if(typePiece=="pion noir") {
+      if (caseDeDestination.no_case == 8
+        || caseDeDestination.no_case == 16
+        || caseDeDestination.no_case == 24
+        || caseDeDestination.no_case == 32
+        || caseDeDestination.no_case == 40
+        || caseDeDestination.no_case == 48
+        || caseDeDestination.no_case == 56
+        || caseDeDestination.no_case == 64) {
+        console.log("pion noir en bout de ligne validé");
+        return true;
+      }else
+      {
+        return false;
+      }
+    }
+      else if (typePiece=="pion blanc") {
+      if (caseDeDestination.no_case == 1
+        || caseDeDestination.no_case == 9
+        || caseDeDestination.no_case == 17
+        || caseDeDestination.no_case == 25
+        || caseDeDestination.no_case == 33
+        || caseDeDestination.no_case == 41
+        || caseDeDestination.no_case == 49
+        || caseDeDestination.no_case == 57) {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+      else
+      {
+        return false;
+      }
+  }
+   */
+
+
+
+
+  /**
+   * Méthode qui change le type du pion.
+   * @param piece
+   * @param caseDeDestination
+   */
+  /*
+  public changementTypeDuPion(piece:Piece, transformationPion:TransformationPion)
+  {
+    if(piece.couleur.couleur=="blanc")
+    {
+      switch(transformationPion.transformationPion) {
+        case "dame": {
+          piece.type = "reine blanc";
+          break;
+        }
+        case "tour": {
+          piece.type = "tour blanc";
+          break;
+        }
+        case "fou": {
+          piece.type = "fou blanc";
+          break;
+        }
+        case "cavalier": {
+          piece.type = "cavalier blanc";
+          break;
+        }
+        default: {
+          piece.type = "pion blanc";
+          break;
+        }
+      }
+    }else
+    {
+      switch(transformationPion.transformationPion) {
+        case "dame": {
+          piece.type = "reine noir";
+          break;
+        }
+        case "tour": {
+          piece.type = "tour noir";
+          break;
+        }
+        case "fou": {
+          piece.type = "fou noir";
+          break;
+        }
+        case "cavalier": {
+          piece.type = "cavalier noir";
+          break;
+        }
+        default: {
+          piece.type = "pion noir";
+          break;
+        }
+      }
+    }
+  }
+  */
+
+
+
+
+  /**
+   * Méthode qui déclenche la pop-up Echec au Roi.
+   */
+  public echecAuRoi(casesDeplacement:CaseGet[])
+  {
+    this.echecsservice.controleEchecAuRoi(casesDeplacement).subscribe(
+      (response: boolean) => {
+        this.roiEnEchec = response;
+        // TEST :
+        console.log("Roi en échec : "+this.roiEnEchec);
+        // TEST :
+        if(this.roiEnEchec) {
+          console.log("modal-10 déclenché.");
+          this.modalService.open('modal-10');
+        }
+      });
+  }
+
+
+
+
+  /**
+   * Méthode qui récupère le camp qui joue.
+   */
+  public recuperationCampQuiJoue():void
+  {
+    this.echecsservice.controleCampQuiJoue().subscribe({
+      next:response => {
+        this.couleurCamp = response;
+        console.log("check booléen : "+response);
+      },
+      error:err => {
+        console.log(err);
+      },
+      complete:()=>{
+        this.campQuiJoue();
+      }
+    });
+  }
+
+
+
+
+  /**
+   * Méthode qui renvoie un String.
+   */
+  campQuiJoue():string
+  {
+    return this.couleurCamp?"blanc":"noir";
+    /*
+    if(this.couleurCamp)
+    {
+      this.campQuiDoiJouer = "blanc";
+    }
+    else
+    {
+      this.campQuiDoiJouer = "noir";
+    }
+    */
+    // console.log("couleur renvoyée"+this.campQuiDoiJouer);
+    // return this.campQuiDoiJouer;
+  }
+  /*
+    public recuperationCampQuiJoue():void
+  {
+    this.echecsservice.controleCampQuiJoue().subscribe({
+      next:response => {
+        this.couleurCamp = response;
+        console.log("booléen récupéré"+response);
+      },
+      error:err => {
+        console.log(err);
+      },
+      complete:()=>{
+    this.campQuiJoue();
+    }
+    });
+  }
+  */
+
+
 
 
 
