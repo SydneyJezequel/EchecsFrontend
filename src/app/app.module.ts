@@ -20,7 +20,9 @@ import { ModalComponent } from './_components/modal/modal.component';
 
 
 
+
 @NgModule({
+
 
 
   /******************************* Déclarations des composants *******************************/
@@ -40,6 +42,7 @@ import { ModalComponent } from './_components/modal/modal.component';
   ],
 
 
+
   /******************************* Importations des modules *******************************/
   imports: [
     BrowserModule,
@@ -49,9 +52,12 @@ import { ModalComponent } from './_components/modal/modal.component';
   ],
 
 
+
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
 })
 
 
+
 export class AppModule { }
+

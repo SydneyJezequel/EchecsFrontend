@@ -2,10 +2,14 @@ import {Role} from "./Role";
 import {User} from "./User";
 
 
+
+
+
 /**
- * Cette classe définit les objets users récupéré depuis la Base de données.
+ * Cette classe définit les objets de type User récupérés depuis la Base de données.
  */
 export class UserGet implements User {
+
 
 
 
@@ -21,9 +25,11 @@ export class UserGet implements User {
 
 
 
+
   /******************************* Constructeur *******************************/
 
   constructor() {}
+
 
 
 

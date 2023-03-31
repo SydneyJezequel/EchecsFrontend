@@ -4,8 +4,8 @@ import {EchecsserviceService} from "./echecsservice.service";
 import {TransformationPion} from "../variables-globales/TransformationPion";
 import {MessageService} from "./message.service";
 import {Observable, Subscription} from "rxjs";
-import {CampBlancComponent} from "../_components/echecs/camp-blanc/camp-blanc.component";
 import {Piece} from "../_model/Piece";
+
 
 
 
@@ -22,6 +22,7 @@ export class ModalService {
 
 
 
+
   /******************************* Attributs *******************************/
 
   private modals: ModalComponent[] = [];
@@ -31,11 +32,13 @@ export class ModalService {
 
 
 
+
   /******************************* Constructeur *******************************/
 
   constructor(private echecsservice:EchecsserviceService,
               private transformationPion:TransformationPion,
               private messageService:MessageService) { }
+
 
 
 
@@ -57,6 +60,7 @@ export class ModalService {
 
 
 
+
   /**
    * Méthode qui supprime un modal / une pop-up.
    * @param modal
@@ -65,6 +69,7 @@ export class ModalService {
     // remove modal from array of active modals
     this.modals = this.modals.filter(x => x === modal);
   }
+
 
 
 
@@ -85,6 +90,7 @@ export class ModalService {
 
 
 
+
   /**
    * Méthode qui ferme un modal / une pop-up.
    * @param modal
@@ -97,8 +103,10 @@ export class ModalService {
 
 
 
+
   /**
-   * Méthode qui transforme un pion arrivé au bout de l'échiquier en nouvelle pièce.
+   * Méthode qui appelle le backend pour transformer un pion arrivé
+   * au bout de l'échiquier en nouvelle pièce.
    */
    public nouvellePiece(nouvellePiece:string){
     this.messageService.sendMessage(nouvellePiece);
@@ -106,10 +114,6 @@ export class ModalService {
     const modal = this.modals.find(x => x.isOpen);
     modal?.close();
    }
-
-
-
-
   // **************** SERVICE SIMPLE ****************
   // VERSION DE LA METHODE QUI UTILISE UN SERVICE MAIS PAS D'OBSERVABLE :
   /**
@@ -186,6 +190,8 @@ export class ModalService {
   }
   */
   // **************** SERVICE SIMPLE ****************
+
+
 
 
 

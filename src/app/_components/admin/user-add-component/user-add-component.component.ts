@@ -8,6 +8,9 @@ import { Router } from '@angular/router';
 import {ModalService} from "../../../_services/modal.service";
 
 
+
+
+
 /**
  * Ce composant gère l'ajout des Utilisateurs sur cette application.
  * Il est utilisé par le board Admin.
@@ -22,6 +25,7 @@ export class UserAddComponent implements OnInit {
 
 
 
+
   /******************************* Attributs *******************************/
 
   user = new User();
@@ -30,6 +34,7 @@ export class UserAddComponent implements OnInit {
   AllRoles?: Role[];
   NewRoles: Role[]=[];
   chosenObj?: Role;
+
 
 
 
@@ -52,6 +57,7 @@ export class UserAddComponent implements OnInit {
 
 
 
+
   /******************************* Initialisation de la page *******************************/
 
   ngOnInit(): void {
@@ -66,10 +72,11 @@ export class UserAddComponent implements OnInit {
 
 
 
+
   /******************************* Méthodes *******************************/
 
   /**
-   * Méthode pour ajouter un User :
+   * Méthode pour ajouter un User.
    */
   public addUser(){
     this.user;
@@ -81,8 +88,10 @@ export class UserAddComponent implements OnInit {
 
 
 
+
   /**
-   * Méthode pour ajouter un Rôle.
+   * Méthode pour ajouter un Rôle à un user.
+   * @param : user auquel le rôle est ajouté.
    */
   public AddRole(user : User)
   {
@@ -96,8 +105,10 @@ export class UserAddComponent implements OnInit {
 
 
 
+
   /**
-   * Méthode pour supprimer un User.
+   * Méthode pour supprimer un rôle.
+   * @Param : role.
    */
   public DeleteRole(role:Role)
   {
@@ -107,12 +118,14 @@ export class UserAddComponent implements OnInit {
 
 
 
+
   /**
    * Méthode pour retourner au Board Admin
    */
   gotoBoardAdmin() {
     this.router.navigate(['/admin']);
   }
+
 
 
 

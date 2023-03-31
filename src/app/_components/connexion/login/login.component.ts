@@ -3,8 +3,11 @@ import { AuthService } from '../../../_services/auth.service';
 import { StorageService } from '../../../_services/storage.service';
 
 
+
+
+
 /**
- * Ce composant sert à se connecter
+ * Ce composant gère la connexion des utilisateurs.
  */
 @Component({
   selector: 'app-login',
@@ -12,6 +15,7 @@ import { StorageService } from '../../../_services/storage.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+
 
 
 
@@ -30,6 +34,7 @@ export class LoginComponent implements OnInit {
 
 
 
+
   /******************************* Constructeur *******************************/
 
   /**
@@ -38,6 +43,7 @@ export class LoginComponent implements OnInit {
    * @param storageService
    */
   constructor(private authService: AuthService, private storageService: StorageService) { }
+
 
 
 
@@ -54,10 +60,11 @@ export class LoginComponent implements OnInit {
 
 
 
+
   /******************************* Méthodes *******************************/
 
   /**
-   * Méthode de Soumission du formulaire.
+   * Méthode qui soumet le formulaire de connexion.
    */
   onSubmit(): void {
     const { username, password } = this.form // On récupère les credentials du formulaire.
@@ -81,12 +88,14 @@ export class LoginComponent implements OnInit {
 
 
 
+
   /**
    * Méthode qui recharge la page en cours.
    */
   reloadPage(): void {
     window.location.reload();
   }
+
 
 
 

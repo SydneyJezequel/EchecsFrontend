@@ -21,7 +21,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor=" let user of users_list"> <!--| employeeFilterPipe:searchText-->
+    <tr *ngFor=" let user of users_list">
       <td>{{user.username}}</td>
       <td>{{user.email}}</td>
       <td *ngFor=" let role of user.roles">{{role.name}}</td>
@@ -35,7 +35,7 @@
   </table>
 
 
-  <!--Boutons pour ajouter un user-->
+  <!--Bouton pour ajouter un user-->
   <div class="group">
     <br>
     <button class = "ajouter" (click)="addUser()">Ajouter un user</button>
@@ -46,3 +46,4 @@
 
 
 </div>
+

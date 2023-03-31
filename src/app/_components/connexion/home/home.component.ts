@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {UserService} from "../../../_services/user.service";
 
 
+
+
+
 /**
  * Ce composant gère la page d'accueil du service.
  * Il utilise le UserService pour obtenir des ressources publiques du back-end.
@@ -16,11 +19,13 @@ export class HomeComponent implements OnInit {
 
 
 
+
   /******************************* Attributs *******************************/
 
   content?: string;
   displayContent1?: string;
   displayContent2?: string;
+
 
 
 
@@ -32,6 +37,7 @@ export class HomeComponent implements OnInit {
    * @param userService
    */
   constructor(private userService: UserService) { }
+
 
 
 
@@ -57,6 +63,7 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+
 
 
 

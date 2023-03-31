@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
 
+
+
+
 /**
  * Ce composant gère l'ajout des Utilisateurs sur ce site.
  * Il est utilisé par le board Admin.
@@ -15,9 +18,11 @@ export class EchiquierComponent implements OnInit {
 
 
 
+
   /******************************* Constructeur *******************************/
 
   constructor() { }
+
 
 
 
@@ -26,6 +31,7 @@ export class EchiquierComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
 
 
 

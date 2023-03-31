@@ -2,10 +2,14 @@ import {Piece} from "./Piece";
 import {Couleur} from "./Couleur";
 
 
+
+
+
 /**
- * Cette classe définit les objets Case enregistrés en base de données.
+ * Cette classe définit les objets de type Case.
  */
 export interface Case {
+
 
 
 
@@ -16,6 +20,7 @@ export interface Case {
   ligne:number;
   couleur:Couleur;
   piece:Piece;
+
 
 
 

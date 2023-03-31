@@ -4,6 +4,9 @@ import {Observable} from "rxjs";
 import {CaseGet} from "../_model/CaseGet";
 
 
+
+
+
 /**
  * Ce service gère l'échiquier (initialisation, déplacement des pièces, etc.).
  */
@@ -11,7 +14,6 @@ import {CaseGet} from "../_model/CaseGet";
   providedIn: 'root'
 })
 export class EchecsserviceService {
-
 
 
 
@@ -32,7 +34,6 @@ export class EchecsserviceService {
 
 
 
-
   /******************************* Constructeur *******************************/
 
   constructor(private http:HttpClient) { }
@@ -41,11 +42,11 @@ export class EchecsserviceService {
 
 
 
-
   /******************************* Méthodes *******************************/
 
   /**
-   * Méthode qui ré-initialise l'échiquier.
+   * Méthode appelle le backend pour ré-initialiser l'échiquier.
+   * @param camp : string qui indique la façon d'afficher l'échiquier en fonction du camp.
    */
   public getEchequierReInitialise(camp:String):Observable<CaseGet[]>
   {
@@ -56,7 +57,8 @@ export class EchecsserviceService {
 
 
   /**
-   * Méthode qui affiche l'échiquier.
+   *  Méthode qui appelle le backend pour récupérer l'échiquier.
+   *  @param camp : string qui indique la façon d'afficher l'échiquier en fonction du camp.
    */
   public getEchequier(camp:String):Observable<CaseGet[]>
   {
@@ -68,7 +70,7 @@ export class EchecsserviceService {
 
 
   /**
-   * Méthode qui déplace les pièces d'une case à l'autre
+   * Méthode qui appelle le backend pour déplacer les pièces.
    * @param cases : tableau qui contient les cases de départ et de destination.
    */
   deplacerPiece(cases:CaseGet[]):Observable<CaseGet[]> {
@@ -79,7 +81,8 @@ export class EchecsserviceService {
 
 
   /**
-   * Méthode qui contrôle si le roi et en échec (échec au roi ou échec et mat).
+   * Méthode qui appelle le backend pour contrôler si le roi
+   * est en échec.
    */
   controleEchecAuRoi(cases:CaseGet[]):Observable<boolean>
   {
@@ -91,26 +94,11 @@ export class EchecsserviceService {
 
 
   /**
-   * Méthode qui renvoie le camp qui joue.
-   * @param cases : string qui contient la couleur du camp qui joue.
+   * Méthode qui appelle le backend pour récupèrer le camp qui joue.
    */
   controleCampQuiJoue():Observable<boolean> {
     return this.http.get<boolean>(this.campQuiJoueUrl);
   }
-
-
-
-
-  /**
-   * Méthode qui transforme un pion en pièce.
-   * @param cases : string qui contient le nom de la pièce dans laquelle sera transformé le pion.
-   */
-  /*
-  transformerPion(caseDestination:CaseGet):Observable<CaseGet> {
-    return this.http.put<CaseGet>(this.transformer, caseDestination);
-  }
-  */
-
 
 
 

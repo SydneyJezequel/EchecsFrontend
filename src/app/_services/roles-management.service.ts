@@ -4,6 +4,9 @@ import {Observable} from "rxjs";
 import {Role} from "../_model/Role";
 
 
+
+
+
 /**
  * Ce service gère les rôles disponible sur cette application.
  */
@@ -15,9 +18,11 @@ export class RolesManagementService {
 
 
 
+
   /******************************* Attributs *******************************/
 
   private all:string="api/role/all";
+
 
 
 
@@ -33,14 +38,17 @@ export class RolesManagementService {
 
 
 
+
   /******************************* Méthodes *******************************/
 
   /**
-   * La méthode suivante renvoie tous les rôles disponibles sur cette application.
+   * La méthode qui appelle le backend pour renvoyer
+   * tous les rôles disponibles sur l'application.
    */
   getAllRoles(): Observable<Role[]> {
     return this.http.get<Role[]>(this.all);
   }
+
 
 
 

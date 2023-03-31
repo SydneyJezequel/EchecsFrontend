@@ -1,7 +1,7 @@
 import {Observable, Observer, Subject} from 'rxjs';
 import {Inject, Injectable} from '@angular/core';
 import {Piece} from "../_model/Piece";
-import {TransformationPion} from "../variables-globales/TransformationPion";
+
 
 
 
@@ -20,15 +20,13 @@ export class MessageService {
   pieceATransformer!:Piece;
   pieceTransforme!:Piece;
   nouvellePiece!:string;
-
-
-
-
-  /******************************* Observables *******************************/
   private subject = new Subject<string>();
 
 
 
+
+
+  /******************************* Méthodes *******************************/
 
   sendMessage(msg:string) {
     // it is used to publish data
@@ -37,7 +35,6 @@ export class MessageService {
     // ***************** TEST ****************
     return this.subject.next(msg);
   }
-
 
 
 
@@ -64,7 +61,6 @@ export class MessageService {
     return this.nouvellePiece;
   }
   /******************************* Observables *******************************/
-
 
 
 

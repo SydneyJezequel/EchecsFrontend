@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {AuthService} from "../../../_services/auth.service";
 
 
+
+
+
 /**
  * Ce composant gère l'enregistrement des utilisateurs.
  * Il lie les données du formulaire (nom d'utilisateur, email, mot de passe)
@@ -14,6 +17,7 @@ import {AuthService} from "../../../_services/auth.service";
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
+
 
 
 
@@ -32,6 +36,7 @@ export class RegisterComponent implements OnInit {
 
 
 
+
   /******************************* Constructeur *******************************/
 
   /**
@@ -43,6 +48,7 @@ export class RegisterComponent implements OnInit {
 
 
 
+
   /******************************* Initialisation de la page *******************************/
 
   ngOnInit(): void {}
@@ -50,10 +56,11 @@ export class RegisterComponent implements OnInit {
 
 
 
+
   /******************************* Méthodes *******************************/
 
   /**
-   * Méthode qui gère le Formulaire de soumssion
+   * Méthode qui soumet le formulaire d'inscription.
    */
   onSubmit(): void {
     const { username, email, password } = this.form;
@@ -70,6 +77,7 @@ export class RegisterComponent implements OnInit {
       }
     });
   }
+
 
 
 

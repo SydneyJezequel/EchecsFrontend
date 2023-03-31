@@ -5,16 +5,15 @@ import {User} from "../_model/User";
 import {UserGet} from "../_model/UserGets";
 
 
+
+
+
 // Début de l'url :
 const USER_API = 'api/user/';
-
-
 // Option de configuration de l'entête :
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
-
-
 /**
  * Ce service gère les users (ajouter, modifier, supprimer, etc.).
  */
@@ -22,6 +21,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class UsersManagementService {
+
 
 
 
@@ -37,6 +37,7 @@ export class UsersManagementService {
 
 
 
+
   /******************************* Constructeur *******************************/
 
   /**
@@ -47,10 +48,11 @@ export class UsersManagementService {
 
 
 
+
   /******************************* Méthodes *******************************/
 
   /**
-   * Méthode qui récupère tous les users.
+   * Méthode qui appelle le bakend pour récupèrer tous les users.
    */
   getUsers():Observable<UserGet[]>
   {
@@ -59,8 +61,10 @@ export class UsersManagementService {
 
 
 
+
   /**
-   * Méthode qui récupère un user via son id.
+   * Méthode qui appelle le bakend pour récupèrer un user via son id.
+   * @param id du user.
    */
   getUser(id: number):Observable<UserGet>
   {
@@ -70,8 +74,11 @@ export class UsersManagementService {
 
 
 
+
   /**
    * Méthode qui modifie un user.
+   * @param id du user
+   * @param user nouvelle version du user
    */
   editUser(id:number, user: User):Observable<User>{
     return this.http.put<User>(this.update + id, user);
@@ -79,8 +86,10 @@ export class UsersManagementService {
 
 
 
+
   /**
    * Méthode qui supprime un user.
+   * @param id du user supprimé.
    */
   deleteUser(id: number):Observable<void>
   {
@@ -89,13 +98,16 @@ export class UsersManagementService {
 
 
 
+
   /**
    * Méthode qui ajoute un user.
+   * @param user ajouté.
    */
   addUser(user : User):Observable<User>
   {
       return this.http.post<User>(this.add, user);
   }
+
 
 
 

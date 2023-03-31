@@ -3,10 +3,14 @@ import {Piece} from "./Piece";
 import {Couleur} from "./Couleur";
 
 
+
+
+
 /**
- * Cette classe définit les objets Case récupéré depuis la base de données.
+ * Cette classe définit les objets de type Case récupérés depuis la base de données.
  */
 export class CaseGet implements Case {
+
 
 
 
@@ -22,9 +26,11 @@ export class CaseGet implements Case {
 
 
 
+
   /******************************* Constructeur *******************************/
 
   constructor() {}
+
 
 
 

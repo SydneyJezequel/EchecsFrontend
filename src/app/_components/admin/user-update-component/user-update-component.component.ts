@@ -9,6 +9,9 @@ import { Router } from '@angular/router';
 import {ModalService} from "../../../_services/modal.service";
 
 
+
+
+
 /**
  * Ce composant gère la modification des Utilisateurs sur cette application.
  * Il est utilisé par le board Admin.
@@ -23,6 +26,7 @@ export class UserUpdateComponent implements OnInit {
 
 
 
+
   /******************************* Attributs *******************************/
 
   user = new UserGet();
@@ -30,6 +34,7 @@ export class UserUpdateComponent implements OnInit {
   role!: Role;
   AllRoles?: Role[];
   chosenObj?: Role;
+
 
 
 
@@ -48,6 +53,7 @@ export class UserUpdateComponent implements OnInit {
               private role_service: RolesManagementService,
               private router:Router,
               private modalService:ModalService) { }
+
 
 
 
@@ -74,6 +80,7 @@ export class UserUpdateComponent implements OnInit {
 
 
 
+
   /******************************* Méthodes *******************************/
 
   public trackByFn(index: any, item: any) {
@@ -82,9 +89,11 @@ export class UserUpdateComponent implements OnInit {
 
 
 
+
   /**
    * Méthode pour modifier un User.
-   * @param user
+   * @param user correspond au nouveau user.
+   * @param id du user modifié
    */
   public editUser(id:number, user: User){
     this.user_manager.editUser(id, user).subscribe(
@@ -95,6 +104,7 @@ export class UserUpdateComponent implements OnInit {
     );
     this.modalService.open('modal-2')
   }
+
 
 
 
@@ -119,8 +129,10 @@ export class UserUpdateComponent implements OnInit {
 
 
 
+
   /**
-   * Méthode pour supprimer un User.
+   * Méthode pour supprimer un Rôle.
+   * @param item de type Role.
    */
   public DeleteRole(item: Role)
   {
@@ -130,12 +142,14 @@ export class UserUpdateComponent implements OnInit {
 
 
 
+
   /**
    * Méthode pour retourner au Board Admin
    */
   gotoBoardAdmin() {
     this.router.navigate(['/admin']);
   }
+
 
 
 

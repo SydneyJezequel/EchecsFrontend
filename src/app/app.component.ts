@@ -5,7 +5,8 @@ import { ModalService } from "./_services/modal.service";
 import {CaseGet} from "./_model/CaseGet";
 import {HttpErrorResponse} from "@angular/common/http";
 import {EchecsserviceService} from "./_services/echecsservice.service";
-import {MessageService} from "./_services/message.service";
+
+
 
 
 
@@ -21,6 +22,7 @@ import {MessageService} from "./_services/message.service";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+
 
 
 
@@ -52,8 +54,8 @@ export class AppComponent {
   constructor(private storageService: StorageService,
               private authService: AuthService,
               public modalService: ModalService,
-              private echecsservice:EchecsserviceService,
-              private messageService:MessageService) { }
+              private echecsservice:EchecsserviceService) { }
+
 
 
 
@@ -80,11 +82,11 @@ export class AppComponent {
 
 
 
+
   /******************************* Méthodes *******************************/
 
-
   /**
-   * Déconnexion :
+   * Méthode de déconnexion :
    */
   logout(): void {
     // Appel du service déconnexion.
@@ -104,6 +106,7 @@ export class AppComponent {
 
 
 
+
   /**
    * Méthode qui ré-initialise l'échecquier pour commencer une nouvelle partie.
    */
@@ -120,6 +123,7 @@ export class AppComponent {
       }
     )
   }
+
 
 
 

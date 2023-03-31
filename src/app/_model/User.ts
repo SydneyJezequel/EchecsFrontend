@@ -1,10 +1,14 @@
 import {Role} from "./Role";
 
 
+
+
+
 /**
- * Cette classe définit les objets users enregistrés en Base de données.
+ * Cette classe définit les objets de type User.
  */
 export class User {
+
 
 
 
@@ -19,9 +23,11 @@ export class User {
 
 
 
+
   /******************************* Constructeur *******************************/
 
   constructor() {}
+
 
 
 

@@ -3,13 +3,18 @@ import {Observable} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 
+
+
+
 // Début de l'url :
 const AUTH_API = 'api/auth/';
-
 // Option de configuration de l'entête :
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
+
+
+
 
 
 /**
@@ -27,6 +32,7 @@ export class AuthService {
 
 
 
+
   /******************************* Constructeur *******************************/
 
   constructor(private http: HttpClient) {}
@@ -40,10 +46,11 @@ export class AuthService {
 
 
 
+
   /******************************* Méthodes *******************************/
 
   /**
-   * Méthode de connexion :
+   * Méthode qui appelle le backend pour gèrer l'authentification :
    */
   login(username: string, password: string): Observable<any> { // Les requêtes HTTP sont convertit sous la forme d'un observable.
     return this.http.post(
@@ -58,8 +65,9 @@ export class AuthService {
 
 
 
+
   /**
-   * Méthode d'enregistrement :
+   * Méthode  qui appelle le backend pour gérer l'enregistrement d'un user.
    */
   register(username: string, email: string, password: string): Observable<any> { // Les requêtes HTTP sont convertit sous la forme d'un observable.
     return this.http.post(
@@ -75,14 +83,16 @@ export class AuthService {
 
 
 
+
   /**
-   * Méthode de déconnexion :
+   * Méthode qui appelle le backend pour gèrer la déconnexion.
    */
   logout(): Observable<any> { // Les requêtes HTTP sont convertit sous la forme d'un observable.
     return this.http.post(
       AUTH_API + 'signout', { },
       httpOptions);
   }
+
 
 
 

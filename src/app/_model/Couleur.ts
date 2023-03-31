@@ -1,9 +1,10 @@
 
 
 /**
- * Cette classe définit les objets Couleurs enregistrés en base de données.
+ * Cette classe définit les objets de type Couleur.
  */
 export interface Couleur {
+
 
 
 
@@ -12,6 +13,7 @@ export interface Couleur {
 
   no_couleur:number;
   couleur:string;
+
 
 
 

@@ -7,12 +7,20 @@ import {UserGet} from "../../../_model/UserGets";
 import { Router } from '@angular/router';
 
 
+
+
+
+/**
+ * Ce composant gère l'affichage de la page centrale de l'espace
+ * de gestion des users par l'administrateur de l'application.
+ */
 @Component({
   selector: 'app-board-admin',
   templateUrl: './board-admin.component.html',
   styleUrls: ['./board-admin.component.scss']
 })
 export class BoardAdminComponent implements OnInit {
+
 
 
 
@@ -28,6 +36,7 @@ export class BoardAdminComponent implements OnInit {
 
 
 
+
   /******************************* Constructeur *******************************/
 
   /**
@@ -37,6 +46,7 @@ export class BoardAdminComponent implements OnInit {
   constructor(private userService: UserService,
               private user_manager: UsersManagementService,
               private router:Router) { }
+
 
 
 
@@ -78,10 +88,11 @@ export class BoardAdminComponent implements OnInit {
 
 
 
+
   /******************************* Méthodes *******************************/
 
   /**
-   * Méthode qui renvoie les users.
+   * Méthode qui renvoie les users récupérés en BDD.
    */
   public getUsers():Observable<UserGet[]>
   {
@@ -90,8 +101,10 @@ export class BoardAdminComponent implements OnInit {
 
 
 
+
   /**
    * Méthode qui supprime les users.
+   * @Param : id du user.
    */
   public deleteUser(id: number)
   {
@@ -104,6 +117,7 @@ export class BoardAdminComponent implements OnInit {
 
 
 
+
   /**
    * Méthode qui ajoute un User.
    * @param user
@@ -111,6 +125,7 @@ export class BoardAdminComponent implements OnInit {
   public addUser(){
       this.router.navigate(['/admin/add']);
   }
+
 
 
 

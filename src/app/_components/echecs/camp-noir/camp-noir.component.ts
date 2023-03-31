@@ -15,7 +15,7 @@ import {MessageService} from "../../../_services/message.service";
 
 
 /**
- * Ce composant gère l'échiquier dans le camp noir.
+ * Ce composant gère l'échiquier du point de vue du camp noir.
  */
 @Component({
   selector: 'app-camp-noir',
@@ -74,7 +74,6 @@ export class CampNoirComponent implements OnInit {
     );
     */
     /***************** Observables *****************/
-
   }
 
 
@@ -92,9 +91,6 @@ export class CampNoirComponent implements OnInit {
       (response: CaseGet[]) =>
       {
         this.cases = response;
-        // *************** TEST ***************
-        console.log(this.cases)
-        // *************** TEST ***************
         this.cases.sort(function compare(a, b) {
           if (a.no_case < b.no_case)
             return -1;
@@ -102,7 +98,9 @@ export class CampNoirComponent implements OnInit {
             return 1;
           return 0;
         });
+        // Test :
         console.log(this.cases);
+        // Test :
       },
       (error:HttpErrorResponse) =>
       {
@@ -143,21 +141,15 @@ export class CampNoirComponent implements OnInit {
 
   /**
    * Méthode qui permet de déplacer une pièce
-   * @param i : case sélectionnée.
+   * @param i : case sélectionnée par le joueur.
    */
   public deplacement(i: CaseGet) {
 
     // 1 - Sélection de la case de Départ et de la case d'arrivée :
     if (!this.caseDeplacement.casesDeplacement.length) {
       this.selectCaseDepart(i);
-      // ******* TEST *******
-      console.log(i);
-      // ******* TEST *******
     } else {
       this.selectCaseDestination(i);
-      // ******* TEST *******
-      console.log(i);
-      // ******* TEST *******
       this.echecsservice.deplacerPiece(this.caseDeplacement.casesDeplacement).subscribe({
         next: response => {
           this.cases = response;
@@ -172,9 +164,11 @@ export class CampNoirComponent implements OnInit {
         }, error:err => {
           alert(err.message);
         }});
-      // 4- Déclenchement de la pop-up échec au roi :
-      this.echecAuRoi(this.caseDeplacement.casesDeplacement);
+      // 2- Déclenchement de la pop-up échec au roi :
+      // this.echecAuRoi(this.caseDeplacement.casesDeplacement);
+      //3- Ré-initialisation des cases de déplacement :
       this.caseDeplacement.casesDeplacement = [];
+      // 4- Récupération du camp qui doit jouer :
       setTimeout(() =>{
         this.recuperationCampQuiJoue()
       },1000);
@@ -211,11 +205,11 @@ export class CampNoirComponent implements OnInit {
         console.log("BLOCAGE DECLENCHE");
         this.modalService.open('modal-12');
       }
+      // 3- Récupération de la case de départ :
       else
       {
         this.caseDeplacement.casesDeplacement.push(this.selectCase(i));
         this.modalService.open('modal-7');
-        // 3- Sélectionner la case de destination et déplacer la pièce :
         return this.caseDeplacement.casesDeplacement;
       }
     }
@@ -235,7 +229,7 @@ export class CampNoirComponent implements OnInit {
     let piece = this.caseDeplacement.casesDeplacement[0].piece;
     let typePiece: string = this.caseDeplacement.casesDeplacement[0].piece.type;
     let test;
-
+    // 2- Gestion d'un pion au bout de l'échiquier :
     if (this.pionBoutEchiquier(typePiece, caseDeDestination)) {
       // **************** SERVICE SIMPLE ****************
       /*
@@ -290,6 +284,7 @@ export class CampNoirComponent implements OnInit {
       // Renvoie de l'Array caseDeplacement :
       return this.caseDeplacement.casesDeplacement;
       // **************** OBSERVABLE ****************
+    //3- Déplacement d'une pièce hors pion au bout de l'échiquier :
     } else {
       this.caseDeplacement.casesDeplacement.push(caseDeDestination);
       return this.caseDeplacement.casesDeplacement;
@@ -299,7 +294,9 @@ export class CampNoirComponent implements OnInit {
 
 
 
-  // METHODE ASYNCHRONE :
+  /**
+   * Méthode qui gère l'asynchronicité.
+   */
   loadComponents() {
     return new Promise<string>((resolve) => {
       resolve(this.messageService.accessMessage());
@@ -319,12 +316,79 @@ export class CampNoirComponent implements OnInit {
 
 
   /**
-   * Méthode qui change le type du pion.
+   * Méthode qui renvoie une pièce à partir de sa case.
+   * @param i : case sélectionnée
+   */
+  public selectPiece(i: CaseGet)
+  {
+    return i.piece;
+  }
+
+
+
+
+  /**
+   * Méthode qui sélectionne et renvoie une case.
+   * @param i
+   */
+  public selectCase(i: CaseGet)
+  {
+    return i;
+  }
+
+
+
+
+  /**
+   * Méthode qui identifie si un pion est arrivé au bout de l'échiquier.
+   * @param piece
+   * @param caseDeDestination
+   */
+  public pionBoutEchiquier(typePiece:string, caseDeDestination:CaseGet)
+  {
+    // Règles de contrôle pour transformer un pion noir :
+    if(typePiece=="pion noir"
+      && (caseDeDestination.no_case == 8
+        || caseDeDestination.no_case == 16
+        || caseDeDestination.no_case == 24
+        || caseDeDestination.no_case == 32
+        || caseDeDestination.no_case == 40
+        || caseDeDestination.no_case == 48
+        || caseDeDestination.no_case == 56
+        || caseDeDestination.no_case == 64)
+    )
+    {
+      return true;
+    // Règles de contrôle pour transformer un pion blanc :
+    }else if (typePiece=="pion blanc"
+      && (caseDeDestination.no_case == 1
+        || caseDeDestination.no_case == 9
+        || caseDeDestination.no_case == 17
+        || caseDeDestination.no_case == 25
+        || caseDeDestination.no_case == 33
+        || caseDeDestination.no_case == 41
+        || caseDeDestination.no_case == 49
+        || caseDeDestination.no_case == 57)
+    )
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+
+
+
+  /**
+   * Méthode qui change le pion au bout de l'échiquier en une pièce choisie.
    * @param nouvellePiece : type de pièce choisi.
    */
   public changementTypeDuPion(nouvellePiece:string)
   {
-    // Modification du type de la nouvelle pièce :
+    // 1- Choix d'une nouvelle pièce blanche :
     if(this.pieceTransforme.couleur.couleur=="blanc")
     {
       switch(nouvellePiece) {
@@ -354,6 +418,7 @@ export class CampNoirComponent implements OnInit {
           break;
         }
       }
+    //2- Choix d'une nouvelle pièce noire :
     }else
     {
       switch(nouvellePiece) {
@@ -385,196 +450,13 @@ export class CampNoirComponent implements OnInit {
       }
     }
   }
-  // ANCIENNE VERSION DE LA METHODE :
-  /*
-    public selectCaseDestination(i: CaseGet) {
-      // 1- Sélectionner la case de destination et déplacer la pièce :
-      let caseDeDestination = this.selectCase(i);
-      this.caseDeplacement.casesDeplacement.push(caseDeDestination);
-      return this.caseDeplacement.casesDeplacement;
-  }
-  */
-
-
-
-
-  /**
-   * Méthode qui sélectionne une pièce à partir de sa case.
-   * @param i : case sélectionnée
-   */
-  public selectPiece(i: CaseGet)
-  {
-    return i.piece;
-  }
-
-
-
-
-  /**
-   * Méthode qui sélectionne et renvoie une case.
-   * @param i
-   */
-  public selectCase(i: CaseGet)
-  {
-    return i;
-  }
-
-
-
-
-  /**
-   * Méthode qui identifie si un pion est arrivé au bout de l'échiquier.
-   * @param piece
-   * @param caseDeDestination
-   */
-  public pionBoutEchiquier(typePiece:string, caseDeDestination:CaseGet)
-  {
-    // Règles de contrôle pour transformer un pion
-    if(typePiece=="pion noir"
-      && (caseDeDestination.no_case == 8
-        || caseDeDestination.no_case == 16
-        || caseDeDestination.no_case == 24
-        || caseDeDestination.no_case == 32
-        || caseDeDestination.no_case == 40
-        || caseDeDestination.no_case == 48
-        || caseDeDestination.no_case == 56
-        || caseDeDestination.no_case == 64)
-    )
-    {
-      return true;
-    }else if (typePiece=="pion blanc"
-      && (caseDeDestination.no_case == 1
-        || caseDeDestination.no_case == 9
-        || caseDeDestination.no_case == 17
-        || caseDeDestination.no_case == 25
-        || caseDeDestination.no_case == 33
-        || caseDeDestination.no_case == 41
-        || caseDeDestination.no_case == 49
-        || caseDeDestination.no_case == 57)
-    )
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-  }
-
-
-
-
-  /*
-    public pionBoutEchiquier(typePiece:string, caseDeDestination:CaseGet)
-  {
-    // Règles de contrôle pour transformer un pion
-    if(typePiece=="pion noir") {
-      if (caseDeDestination.no_case == 8
-        || caseDeDestination.no_case == 16
-        || caseDeDestination.no_case == 24
-        || caseDeDestination.no_case == 32
-        || caseDeDestination.no_case == 40
-        || caseDeDestination.no_case == 48
-        || caseDeDestination.no_case == 56
-        || caseDeDestination.no_case == 64) {
-        console.log("pion noir en bout de ligne validé");
-        return true;
-      }else
-      {
-        return false;
-      }
-    }
-      else if (typePiece=="pion blanc") {
-      if (caseDeDestination.no_case == 1
-        || caseDeDestination.no_case == 9
-        || caseDeDestination.no_case == 17
-        || caseDeDestination.no_case == 25
-        || caseDeDestination.no_case == 33
-        || caseDeDestination.no_case == 41
-        || caseDeDestination.no_case == 49
-        || caseDeDestination.no_case == 57) {
-        return true;
-      }
-      else
-      {
-        return false;
-      }
-    }
-      else
-      {
-        return false;
-      }
-  }
-   */
-
-
-
-
-  /**
-   * Méthode qui change le type du pion.
-   * @param piece
-   * @param caseDeDestination
-   */
-  /*
-  public changementTypeDuPion(piece:Piece, transformationPion:TransformationPion)
-  {
-    if(piece.couleur.couleur=="blanc")
-    {
-      switch(transformationPion.transformationPion) {
-        case "dame": {
-          piece.type = "reine blanc";
-          break;
-        }
-        case "tour": {
-          piece.type = "tour blanc";
-          break;
-        }
-        case "fou": {
-          piece.type = "fou blanc";
-          break;
-        }
-        case "cavalier": {
-          piece.type = "cavalier blanc";
-          break;
-        }
-        default: {
-          piece.type = "pion blanc";
-          break;
-        }
-      }
-    }else
-    {
-      switch(transformationPion.transformationPion) {
-        case "dame": {
-          piece.type = "reine noir";
-          break;
-        }
-        case "tour": {
-          piece.type = "tour noir";
-          break;
-        }
-        case "fou": {
-          piece.type = "fou noir";
-          break;
-        }
-        case "cavalier": {
-          piece.type = "cavalier noir";
-          break;
-        }
-        default: {
-          piece.type = "pion noir";
-          break;
-        }
-      }
-    }
-  }
-  */
 
 
 
 
   /**
    * Méthode qui déclenche la pop-up Echec au Roi.
+   * @param casesDeplacement cases de départ et d'arrivée.
    */
   public echecAuRoi(casesDeplacement:CaseGet[])
   {
@@ -617,7 +499,7 @@ export class CampNoirComponent implements OnInit {
 
 
   /**
-   * Méthode qui renvoie un String.
+   * Méthode qui renvoie le camp qui joue sous forme de String.
    */
   campQuiJoue():string
   {

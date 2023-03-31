@@ -1,10 +1,14 @@
 import {Couleur} from "./Couleur";
 
 
+
+
+
 /**
- * Cette classe définit les objets Pièces enregistrés en base de données.
+ * Cette classe définit les objets de type Pièce.
  */
 export interface Piece {
+
 
 
 
@@ -14,6 +18,7 @@ export interface Piece {
   type:string;
   couleur:Couleur;
   statut:string;
+
 
 
 

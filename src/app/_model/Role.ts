@@ -1,8 +1,10 @@
 
+
 /**
- * Cette classe définit les objets Rôles récupérés en base de données.
+ * Cette classe définit les objets de type Rôle.
  */
 export class Role {
+
 
 
 
@@ -14,8 +16,10 @@ export class Role {
 
 
 
+
   /******************************* Constructeur *******************************/
   constructor() {}
+
 
 
 

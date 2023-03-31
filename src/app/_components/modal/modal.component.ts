@@ -2,8 +2,11 @@ import { Component, ViewEncapsulation, ElementRef, Input, OnInit, OnDestroy } fr
 import {ModalService} from "../../_services/modal.service";
 
 
+
+
+
 /**
- * Ce composant gère les modals / Les pop-up de cette application.
+ * Ce composant gère les modals : Les modals sont les pop-up de l'application.
  */
 @Component({
   selector: 'jw-modal',
@@ -16,11 +19,13 @@ export class ModalComponent implements OnInit, OnDestroy {
 
 
 
+
   /******************************* Attributs *******************************/
 
   @Input() id?: string;
   isOpen = false;
   private element: any;
+
 
 
 
@@ -39,15 +44,14 @@ export class ModalComponent implements OnInit, OnDestroy {
 
 
 
+
   /******************************* Initialisation de la page *******************************/
 
   ngOnInit() {
     // add self (this modal instance) to the modal service so it can be opened from any component
     this.modalService.add(this);
-
     // move element to bottom of page (just before </body>) so it can be displayed above everything else
     document.body.appendChild(this.element);
-
     // close modal on background click
     this.element.addEventListener('click', (el: any) => {
       if (el.target.className === 'jw-modal') {
@@ -59,10 +63,11 @@ export class ModalComponent implements OnInit, OnDestroy {
 
 
 
+
   /******************************* Méthodes *******************************/
 
   /**
-   * Méthode qui supprime le modal.
+   * Méthode qui détruit un modal / pop-up.
    */
   ngOnDestroy() {
     // remove self from modal service
@@ -74,8 +79,9 @@ export class ModalComponent implements OnInit, OnDestroy {
 
 
 
+
   /**
-   * Méthode qui ouvre la pop-up.
+   * Méthode qui ouvre un modal / pop-up.
    */
   open() {
     this.element.style.display = 'block';
@@ -85,14 +91,16 @@ export class ModalComponent implements OnInit, OnDestroy {
 
 
 
+
   /**
-   * Méthode qui ferme la pop-up.
+   * Méthode qui ferme un modal / pop-up.
    */
   close() {
     this.element.style.display = 'none';
     document.body.classList.remove('jw-modal-open');
     this.isOpen = false;
   }
+
 
 
 
