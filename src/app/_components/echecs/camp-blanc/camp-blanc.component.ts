@@ -62,7 +62,8 @@ export class CampBlancComponent implements OnInit {
   /******************************* Initialisation de la page *******************************/
 
   ngOnInit(): void {
-    this.getEchecquierReInitialise();
+    this.getEchecquier2();
+    // this.getEchecquierReInitialise();
     this.recuperationCampQuiJoue();
     /***************** Observables *****************/
     /*
@@ -96,6 +97,9 @@ export class CampBlancComponent implements OnInit {
     this.echecsservice.getEchequierReInitialise(this.blanc).subscribe(
       (response: CaseGet[]) => {
         this.casesGet = response;
+        // Test :
+        console.log(this.casesGet);
+        // Test :
         this.casesGet.sort(function compare(a, b) {
           if (a.no_case > b.no_case)
             return -1;
@@ -103,9 +107,10 @@ export class CampBlancComponent implements OnInit {
             return 1;
           return 0;
         });
+        console.log(this.casesGet);
         this.cases = this.casesGet.reverse();
         // Test :
-        console.log(this.casesGet);
+        console.log(this.cases);
         console.log("Echiquier récupéré");
         // Test :
       },
@@ -169,7 +174,7 @@ export class CampBlancComponent implements OnInit {
             alert(err.message);
           }});
         // 2- Déclenchement de la pop-up échec au roi :
-        // this.echecAuRoi(this.caseDeplacement.casesDeplacement);
+        this.echecAuRoi(this.caseDeplacement.casesDeplacement);
         // 3- Ré-initialisation des cases de déplacement :
         this.caseDeplacement.casesDeplacement = [];
         // 4- Récupération du camp qui doit jouer :
@@ -337,6 +342,9 @@ export class CampBlancComponent implements OnInit {
    */
   public selectCase(i: CaseGet)
   {
+    // TEST :
+    console.log(i);
+    // TEST :
     return i;
   }
 
@@ -538,6 +546,39 @@ export class CampBlancComponent implements OnInit {
     });
   }
   */
+
+
+
+
+
+
+
+
+
+
+  /******************************* NOUVEAU FLUX D'AFFICHAGE *******************************/
+
+  /**
+   * Méthode qui renvoie l'échequier.
+   */
+  public getEchecquier2():void
+  {
+    this.echecsservice.getEchequier2().subscribe(
+      (response: CaseGet[]) =>
+      {
+        this.casesGet = response;
+        // Test :
+        console.log("échiquier dans le camp noir :");
+        console.log(this.casesGet);
+        // Test :
+        this.cases = this.casesGet;
+      }),
+      (error:HttpErrorResponse) =>
+      {
+        alert(error.message);
+      }
+  }
+
 
 
 

@@ -30,11 +30,12 @@ export class CampNoirComponent implements OnInit {
 
 
   /******************************* Attributs *******************************/
-
+  public casesGet!:CaseGet[];
   public cases!:CaseGet[];
   public numbers = [1,2,3,4,5,6,7,8];
   public case!:Case;
   public noir:String="noir";
+  public blanc:String="blanc";
   public subscription!:Subscription;
   public pieceTransforme!:Piece;
   public nouvellePiece!:string;
@@ -42,6 +43,7 @@ export class CampNoirComponent implements OnInit {
   public roiEnEchec!:boolean;
   public couleurCamp!:boolean;
   public campQuiDoiJouer!:string;
+
 
 
 
@@ -62,7 +64,8 @@ export class CampNoirComponent implements OnInit {
   /******************************* Initialisation de la page *******************************/
 
   ngOnInit(): void {
-    this.getEchecquierReInitialise();
+    this.getEchecquier2();
+    // this.getEchecquierReInitialise();
     this.recuperationCampQuiJoue();
 
     /***************** Observables *****************/
@@ -87,6 +90,77 @@ export class CampNoirComponent implements OnInit {
    */
   public getEchecquierReInitialise( ):void
   {
+    // 1- Récupération des données :
+    this.echecsservice.getEchequierReInitialise(this.noir).subscribe(
+      (response: CaseGet[]) =>
+      {
+        this.casesGet = response;
+        // Test :
+        console.log(this.casesGet);
+        // Test :
+        this.cases = this.casesGet;
+        }),
+      (error:HttpErrorResponse) =>
+      {
+        alert(error.message);
+      }
+  }
+  // VERSION INTERMEDIAIRE :
+  /*
+   this.echecsservice.getEchequierReInitialise(this.noir).subscribe(
+      (response: CaseGet[]) =>
+      {
+        this.casesGet = response;
+        this.casesGet.sort(function compare(a, b) {
+          if (a.no_case < b.no_case)
+            return -1;
+          if (a.no_case > b.no_case)
+            return 1;
+          return 0;
+        });
+        // 2- Réorganisation de l'échiquier pour l'afficher du point de vue du camp noir :
+        // Initialisation de l'échiquier pour traiement:
+        let casesTemp = [];
+        casesTemp.push(this.casesGet[0]);
+        // Ré-organisation de l'échiquier :
+        for(let i=1; i<=8; i++)
+        {
+          let j;
+          let k;
+          if(i==1)
+          {
+            j = 7;
+            k = j-8;
+          }
+          else
+          {
+            j = (8*i)-1;
+            k = j-7;
+          }
+          for(j; j>=k; j--)
+          {
+            casesTemp.push(this.casesGet[j]);
+          }
+        }
+        // Nettoyage de l'échiquier :
+        casesTemp.splice(0,1);
+        casesTemp.splice(8,1);
+        console.log(casesTemp);
+        // chargement de l'échiquier dans la variable this.cases :
+        this.cases = casesTemp;
+        console.log(this.cases);
+      },
+      (error:HttpErrorResponse) =>
+      {
+        alert(error.message);
+      }
+    )
+  }
+  */
+  // ANCIENNE VERSION DE LA METHODE :
+  /*
+   public getEchecquierReInitialise( ):void
+  {
     this.echecsservice.getEchequierReInitialise(this.noir).subscribe(
       (response: CaseGet[]) =>
       {
@@ -108,6 +182,9 @@ export class CampNoirComponent implements OnInit {
       }
     )
   }
+  */
+
+
 
 
 
@@ -116,6 +193,31 @@ export class CampNoirComponent implements OnInit {
    * Méthode qui renvoie l'échequier.
    */
   public getEchecquier():void
+  {
+    this.echecsservice.getEchequier(this.blanc).subscribe(
+      (response: CaseGet[]) =>
+      {
+        this.cases = response;
+        // Test :
+        console.log(this.casesGet);
+        // Test :
+        this.cases.sort(function compare(a, b) {
+          if (a.no_case < b.no_case)
+            return -1;
+          if (a.no_case > b.no_case)
+            return 1;
+          return 0;
+        });
+      },
+      (error:HttpErrorResponse) =>
+      {
+        alert(error.message);
+      }
+    )
+  }
+  // ANCIENNE VERSION :
+  /*
+    public getEchecquier():void
   {
     this.echecsservice.getEchequier(this.noir).subscribe(
       (response: CaseGet[]) =>
@@ -135,6 +237,7 @@ export class CampNoirComponent implements OnInit {
       }
     )
   }
+  */
 
 
 
@@ -152,20 +255,56 @@ export class CampNoirComponent implements OnInit {
       this.selectCaseDestination(i);
       this.echecsservice.deplacerPiece(this.caseDeplacement.casesDeplacement).subscribe({
         next: response => {
-          this.cases = response;
+          //1- Récupération des pièces de l'échiquier :
+          this.casesGet = response;
           // Tri des cases :
-          this.cases.sort(function compare(a, b) {
-            if (a.no_case < b.no_case)
-              return -1;
+          this.casesGet.sort(function compare(a, b) {
             if (a.no_case > b.no_case)
+              return -1;
+            if (a.no_case < b.no_case)
               return 1;
             return 0;
           });
+          this.cases = this.casesGet;
+          // TEST :
+          console.log(this.cases);
+          // TEST :
+          /*
+          // 2- Réorganisation de l'échiquier pour l'afficher du point de vue du camp noir :
+          // Initialisation de l'échiquier pour traiement:
+          let casesTemp = [];
+          casesTemp.push(this.casesGet[0]);
+          // Ré-organisation de l'échiquier :
+          for(let i=1; i<=8; i++)
+          {
+            let j;
+            let k;
+            if(i==1)
+            {
+              j = 7;
+              k = j-8;
+            }
+            else
+            {
+              j = (8*i)-1;
+              k = j-7;
+            }
+            for(j; j>=k; j--)
+            {
+              casesTemp.push(this.casesGet[j]);
+            }
+          }
+          // Nettoyage de l'échiquier :
+          casesTemp.splice(0,1);
+          casesTemp.splice(8,1);
+          // chargement de l'échiquier dans la variable this.cases :
+          this.cases = casesTemp;
+          */
         }, error:err => {
           alert(err.message);
         }});
       // 2- Déclenchement de la pop-up échec au roi :
-      // this.echecAuRoi(this.caseDeplacement.casesDeplacement);
+      this.echecAuRoi(this.caseDeplacement.casesDeplacement);
       //3- Ré-initialisation des cases de déplacement :
       this.caseDeplacement.casesDeplacement = [];
       // 4- Récupération du camp qui doit jouer :
@@ -333,6 +472,9 @@ export class CampNoirComponent implements OnInit {
    */
   public selectCase(i: CaseGet)
   {
+    // TEST :
+    console.log(i);
+    // TEST :
     return i;
   }
 
@@ -534,6 +676,94 @@ export class CampNoirComponent implements OnInit {
     });
   }
   */
+
+
+
+
+
+
+
+
+  /******************************* NOUVEAU FLUX D'AFFICHAGE *******************************/
+
+  /**
+   * Méthode qui renvoie l'échequier.
+   */
+  public getEchecquier2():void
+  {
+    this.echecsservice.getEchequier2().subscribe(
+      (response: CaseGet[]) =>
+      {
+        this.casesGet = response;
+        // TEST :
+        console.log("echiquier renvoyé : ")
+        console.log(this.casesGet);
+        // TEST :
+        this.casesGet.sort(function compare(a, b) {
+          if (a.no_case > b.no_case)
+            return -1;
+          if (a.no_case < b.no_case)
+            return 1;
+          return 0;
+        });
+        // TEST :
+        console.log("echiquier renvoyé : ")
+        console.log(this.casesGet);
+        this.cases = this.casesGet;
+        // TEST :
+
+        // 2- Réorganisation de l'échiquier pour l'afficher du point de vue du camp noir :
+        // Initialisation de l'échiquier pour traiement:
+        /*
+        let casesTemp = [];
+        casesTemp.push(this.casesGet[0]);
+        // Ré-organisation de l'échiquier :
+        for(let i=1; i<=8; i++)
+        {
+          let j;
+          let k;
+          if(i==1)
+          {
+            j = 7;
+            k = j-8;
+          }
+          else
+          {
+            j = (8*i)-1;
+            k = j-7;
+          }
+          for(j; j>=k; j--)
+          {
+            casesTemp.push(this.casesGet[j]);
+          }
+        }
+        // Nettoyage de l'échiquier :
+        casesTemp.splice(0,1);
+        casesTemp.splice(8,1);
+        // chargement de l'échiquier dans la variable this.cases :
+        this.cases = casesTemp;
+        // TEST :
+        console.log("echiquier renvoyé : ")
+        console.log(this.cases);
+        // TEST :
+        */
+      },
+      (error:HttpErrorResponse) =>
+      {
+        alert(error.message);
+      }
+    )
+  }
+
+
+
+
+
+
+
+
+
+
 
 
 
